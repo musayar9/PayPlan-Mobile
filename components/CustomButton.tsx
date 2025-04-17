@@ -6,15 +6,16 @@ interface CustomButtonProps {
   text: string;
   onPress: () => void;
   style: StyleProp<ViewStyle>;
+  textColor?:string
 }
 
-const CustomButton = ({ text, style, onPress }: CustomButtonProps) => {
+const CustomButton = ({ text, style, onPress, textColor }: CustomButtonProps) => {
   return (
     <Pressable
       style={({ pressed }) => [style, { opacity: pressed ? 0.5 : 1 }]}
       onPress={onPress}
     >
-      <Text style={styles.subText}>{text}</Text>
+      <Text style={[styles.subText, {color:textColor}]}>{text}</Text>
     </Pressable>
   );
 };
