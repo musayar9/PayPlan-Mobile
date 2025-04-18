@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Colors from "@/constants/Colors";
 
@@ -11,6 +11,7 @@ const AuthHeader = ({
 }) => {
   return (
     <View style={styles.headerContainer}>
+    <StatusBar />
       <Text style={styles.subHead}>{subHead}</Text>
       <Text style={styles.subText}>{subText}</Text>
 

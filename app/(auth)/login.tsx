@@ -54,6 +54,7 @@ const Login = () => {
           onPress={() => setShowPassword(!showPassword)}
           isPassword={showPassword ? true : false}
           maxLength={12}
+          status="password"
         />
 
         <TextField style={styles.textField} text="Forgot Password ?" />

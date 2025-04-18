@@ -16,6 +16,8 @@ interface CustomInputProps extends TextInputProps {
   value?: string;
   isPassword?: boolean;
   onPress: () => void;
+  width?: string | number;
+  status?: string;
 }
 
 const CustomInput = ({
@@ -24,20 +26,21 @@ const CustomInput = ({
   value,
   isPassword,
   onPress,
+  width,
+  status,
   ...props
 }: CustomInputProps) => {
   return (
-    <View style={{ position: "relative" }}>
+    <View style={{ position: "relative", width: width }}>
       <Text style={styles.labelText}>{label}</Text>
       <TextInput
         {...props}
         value={value}
         placeholder={placeholder}
         style={styles.input}
-        
       />
 
-      {label === "password" && (
+      {status === "password" && (
         <TouchableOpacity onPress={onPress} style={styles.iconBtn}>
           <Ionicons
             name={isPassword ? "eye" : "eye-off"}
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
 
     marginTop: 20,
   },
-  iconBtn:{
+  iconBtn: {
     position: "absolute",
     top: 28,
     right: 10,
@@ -86,6 +89,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#90a1b9",
     zIndex: 1,
-    
-  }
+  },
 });
