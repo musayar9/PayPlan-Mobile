@@ -12,9 +12,25 @@ import {
 } from "react-native";
 import LottieView from "lottie-react-native";
 import { Video } from "expo-av";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 export default function Index() {
   const router = useRouter();
+  const { user } = useSelector((state) => state.auth);
+  useEffect(() => {
+    const redirect = async () => {
+      if (user) {
+        // router.replace("/(tabs)/home");
+        return <Redirect href={"/(tabs)/home"} />;
+      }
+      // return router.replace("/(auth)");
+      return <Redirect href={"/(auth)"} />;
+    };
+
+    redirect();
+  }, [user]);
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />

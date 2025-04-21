@@ -36,16 +36,20 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "user/login",
-  async (data, { rejectWithValue }) => {
+  async (data:LoginData, { rejectWithValue }) => {
+    console.log("data", data);
     try {
       const response = await api.post("/api/v1/auth/login", data);
+      console.log("respınse", response.data);
       return response.data;
     } catch (error) {
+      console.log("errorersres", error);
       if (axios.isAxiosError(error)) {
         const message =
           error.response?.data?.message || "Bilinmeyen bir hata oluştu.";
         return rejectWithValue(message);
       } else {
+      console.log("error", error)
         return rejectWithValue("Bilinmeyen bir hata oluştu.");
       }
     }

@@ -1,8 +1,8 @@
-import { register } from "@/services/auth/authService";
+import { login, register } from "@/services/auth/authService";
 import { createSlice } from "@reduxjs/toolkit";
 import { isLoading } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { act } from "react";
+
 interface UserState {
   user: null;
   isLoading: boolean;
@@ -36,14 +36,38 @@ const userSlice = createSlice({
         state.user = user;
         state.token = token;
         state.message = message;
-        AsyncStorage.setItem("token", JSON.stringify(token));
+        // AsyncStorage.setItem("token", JSON.stringify(token));
       })
 
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
         state.message = action.error.message;
-      });
+      })
+
+      // login controllers
+
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        error = null;
+        message = null;
+      })
+      
+      .addCase(login.fulfilled, (state, action)=>{
+        state.isLoading = false;
+        console.log("action", action)
+        const { user, token, message } = action.payload;
+        state.user = user;
+        state.token = token;
+        state.message = message;
+        // AsyncStorage.setItem("token", JSON.stringify(token));
+      })
+      
+      .addCase(login.rejected, (state, action)=>{
+        state.isLoading = false;
+        state.error = action.payload;
+        state.message = action.error.message
+      })
   },
 });
 

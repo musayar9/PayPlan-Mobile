@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
 import AuthHeader from "@/components/AuthHeader";
 import CustomInput from "@/components/CustomInput";
@@ -16,13 +16,37 @@ import CustomButton from "@/components/CustomButton";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import OAuthButton from "@/components/OAuthButton";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/services/auth/authService";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { user, isLoading, error, message, token } = useSelector(
+    (state) => state.auth
+  );
+  useEffect(() => {
+    if (token) {
+      router.push("/(tabs)/home");
+    }
+  }, [token]);
+  const handleLogin = async () => {
+    const data = {
+      email: formData.email,
+      password: formData.password,
+    };
+
+    await dispatch(login(data));
+  };
+  console.log("user", user);
+  console.log("error", error);
+  console.log("mesassa", message);
+  console.log("token", token);
   return (
     <View style={styles.container}>
       <AuthHeader
@@ -34,21 +58,17 @@ const Login = () => {
         style={{ flex: 1, marginVertical: 30, marginHorizontal: 25, gap: 20 }}
       >
         <CustomInput
+        style={{textTransform:"lowercase"}}
           label="email"
           placeholder="Enter your E-mail"
-          value={formData.email}
-          onChangeText={(text) =>
-            setFormData({ ...formData.email, email: text })
-          }
-          keyboardType="email-address"
+          value={formData.email.trim()}
+          onChangeText={(text) => setFormData({ ...formData, email: text })}
         />
         <CustomInput
           label="password"
           placeholder="Enter your Password"
-          value={formData.password}
-          onChangeText={(text) =>
-            setFormData({ ...formData.password, password: text })
-          }
+          value={formData.password.trim()}
+          onChangeText={(text) => setFormData({ ...formData, password: text })}
           secureTextEntry={!showPassword}
           // keyboardType="password"
           onPress={() => setShowPassword(!showPassword)}
@@ -63,6 +83,7 @@ const Login = () => {
           text="Login"
           style={styles.loginBtn}
           textColor={Colors.background}
+          onPress={handleLogin}
         />
 
         <View style={styles.dividerContainer}>
@@ -143,7 +164,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     gap: 4,
   },
-  footerText:{
-  color:Colors.textPrimary
-  }
+  footerText: {
+    color: Colors.textPrimary,
+  },
 });
