@@ -7,12 +7,17 @@ import CustomInput from "@/components/CustomInput";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import CustomButton from "@/components/CustomButton";
+import { Link } from "expo-router";
+import AddMemberModal from "@/components/Modals/AddMemberModal";
 const CreateGroup = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     groupPicture: "",
   });
+
+  const [modalVisible, setModalVisible] = useState(false);
+
   const handleImagePicker = async () => {
     try {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -93,10 +98,27 @@ const CreateGroup = () => {
         </Text>
       </View>
 
+      <View style={styles.addMember}>
+        <Text style={styles.memberText}>Add Member</Text>
+
+        <TouchableOpacity
+          // style={styles.addMemberBtn}
+          style={styles.addMemberBtn}
+          onPress={() => { console.log("copern modal"), setModalVisible(true)}}
+        >
+          <Ionicons name="add" size={20} color={Colors.background} />
+        </TouchableOpacity>
+      </View>
+
       <CustomButton
         text="Create"
         style={styles.createBtn}
         textColor={Colors.background}
+      />
+
+      <AddMemberModal
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
       />
     </View>
   );
@@ -147,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    marginTop: 30,
+    // marginTop: 30,
   },
 
   groupPicture: {
@@ -191,6 +213,24 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.palette.accent,
     height: 48,
     borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addMember: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  memberText: {
+    color: Colors.palette.textPrimary,
+    size: 16,
+    fontWeight: 500,
+  },
+  addMemberBtn: {
+    backgroundColor: Colors.palette.accent,
+    width: 35,
+    height: 35,
+    borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
   },

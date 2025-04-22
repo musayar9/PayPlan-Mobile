@@ -25,6 +25,8 @@ const Home = () => {
     AsyncStorage.removeItem("token");
   };
   console.log("token", token);
+  
+  
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.primary} />
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
     paddingBottom: width * 0.2,
     paddingHorizontal: 15,
     gap: 10,
-    backgroundColor: Colors.palette.accent,
+    backgroundColor: Colors.primary,
     height: height * 0.3,
     shadowColor: "#111",
     shadowOffset: {
