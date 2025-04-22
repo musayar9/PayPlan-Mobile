@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     paddingBottom: width * 0.2,
     paddingHorizontal: 15,
     gap: 10,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.palette.accent,
     height: height * 0.3,
     shadowColor: "#111",
     shadowOffset: {

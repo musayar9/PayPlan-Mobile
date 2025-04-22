@@ -1,14 +1,32 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React from "react";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
-const CustomBackButton = () => {
+const CustomBackButton = ({ style }: { style: StyleProp }) => {
+  const router = useRouter();
   return (
-    <View>
-      <Text>CustomBackButton</Text>
-    </View>
-  )
-}
+    <TouchableOpacity
+      style={[styles.button, style]}
+      onPress={() => router.back()}
+    >
+      <Ionicons name="arrow-back" color={Colors.background} size={24} />
+    </TouchableOpacity>
+  );
+};
 
-export default CustomBackButton
+export default CustomBackButton;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  button: {
+    // position: "absolute",
+
+  },
+});

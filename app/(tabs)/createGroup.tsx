@@ -1,0 +1,197 @@
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import CustomBackButton from "@/components/CustomBackButton";
+import Colors from "@/constants/Colors";
+import CustomInput from "@/components/CustomInput";
+import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import CustomButton from "@/components/CustomButton";
+const CreateGroup = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    groupPicture: "",
+  });
+  const handleImagePicker = async () => {
+    try {
+      const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status.status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        base64: true,
+      });
+
+      console.log("resulr", result);
+      setFormData({ ...formData, groupPicture: result.assets[0].base64 });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <StatusBar />
+
+      <View style={styles.head}>
+        <CustomBackButton style={styles.arrowButton} />
+        <Text style={styles.headText}>Create Group</Text>
+      </View>
+
+      <View style={styles.imageContent}>
+        <Image
+          source={{
+            uri: formData.groupPicture
+              ? `data:image/png;base64,${formData.groupPicture}`
+              : "https://img.freepik.com/premium-vector/team-icon-group-people-icon_1199668-1555.jpg?w=360",
+          }}
+          resizeMode="cover"
+          style={styles.groupPicture}
+        />
+
+        <TouchableOpacity style={styles.cameraBtn} onPress={handleImagePicker}>
+          <Ionicons name="camera" />
+        </TouchableOpacity>
+      </View>
+      <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600" }}>
+        {formData.name || "Group Name"}
+      </Text>
+      <View style={styles.forms}>
+        <CustomInput
+          label="Group Name"
+          value={formData.name}
+          onChangeText={(text) => setFormData({ ...formData, name: text })}
+          maxLength={20}
+          placeholder="Enter group name"
+        />
+        <Text style={styles.characterText}>
+          {20 - formData.name.length} characters remaining
+        </Text>
+
+        <CustomInput
+          label="Group Description"
+          numberOfLines={4}
+          inputHeight={{ height: 150 }}
+          value={formData.description}
+          textAlignVertical="top"
+          maxLength={200}
+          multiline={true}
+          placeholder="Tell us about your group"
+          onChangeText={(text) =>
+            setFormData({ ...formData, description: text })
+          }
+        />
+        <Text style={styles.characterText}>
+          {200 - formData.description.length} characters remaining
+        </Text>
+      </View>
+
+      <CustomButton
+        text="Create"
+        style={styles.createBtn}
+        textColor={Colors.background}
+      />
+    </View>
+  );
+};
+
+export default CreateGroup;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: 50,
+    paddingHorizontal: 15,
+    position: "relative",
+
+    backgroundColor: "#fff",
+    gap: 20,
+  },
+  head: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+    paddingVertical: 20,
+  },
+  forms: { gap: 12 },
+  arrowButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    // borderWidth: 1,
+    borderColor: Colors.palette.border,
+    shadowColor: "#000",
+    backgroundColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    elevation: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headText: {
+    fontSize: 20,
+    fontWeight: "500",
+    color: Colors.palette.textPrimary,
+  },
+  imageContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    marginTop: 30,
+  },
+
+  groupPicture: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: Colors.palette.border,
+    padding: 20,
+    shadowColor: "#000",
+    backgroundColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    elevation: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  cameraBtn: {
+    position: "absolute",
+    bottom: 8,
+    right: 130,
+    backgroundColor: Colors.palette.backgroundLight,
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth:1,
+  },
+  characterText: {
+    fontSize: 12,
+    color: Colors.palette.textSecondary,
+    paddingLeft: 12,
+    marginTop: -8,
+  },
+  createBtn: {
+    backgroundColor: Colors.palette.accent,
+    height: 48,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

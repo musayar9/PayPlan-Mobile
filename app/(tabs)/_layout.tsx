@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -82,7 +82,6 @@ const TabsLayout = () => {
           marginHorizontal: 20,
           marginVertical: 10,
           borderRadius: 50,
-          
         },
         tabBarActiveTintColor: Colors.primary,
       }}
@@ -106,6 +105,53 @@ const TabsLayout = () => {
             <TabIcon
               icon="people"
               name="group"
+              focused={focused}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="createGroup"
+        options={{
+          headerShown: false,
+          tabBarButton(props) {
+            return (
+              <TouchableOpacity
+                {...props}
+                style={{
+                  ...props.style,
+                  backgroundColor: Colors.palette.accent,
+                  width: 60,
+                  height: 60,
+                  borderRadius: 30,
+                  top:-20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  shadowColor:"#000",
+                  shadowOffset:{
+                    width:0,
+                    height:10
+                  },
+                  shadowOpacity:0.25,
+                  elevation:5
+                }}
+              >
+                <Ionicons name="add" color="#fff" size={24} />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="tasks"
+        options={{
+          title: "Tasks",
+          headerShown: false,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon
+              icon="checkbox"
+              name="Tasks"
               focused={focused}
               color={color}
             />

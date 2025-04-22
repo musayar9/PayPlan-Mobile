@@ -18,6 +18,8 @@ interface CustomInputProps extends TextInputProps {
   onPress: () => void;
   width?: string | number;
   status?: string;
+  numberOfLines?: number;
+  inputHeight?:number
 }
 
 const CustomInput = ({
@@ -28,6 +30,8 @@ const CustomInput = ({
   onPress,
   width,
   status,
+  numberOfLines,
+  inputHeight,
   ...props
 }: CustomInputProps) => {
   return (
@@ -37,7 +41,8 @@ const CustomInput = ({
         {...props}
         value={value}
         placeholder={placeholder}
-        style={styles.input}
+        style={[styles.input, inputHeight]}
+        numberOfLines={numberOfLines}
       />
 
       {status === "password" && (
@@ -76,7 +81,6 @@ const styles = StyleSheet.create({
     borderColor: "#90a1b9",
     borderRadius: 10,
     paddingHorizontal: 21,
-
     marginTop: 20,
   },
   iconBtn: {
