@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import CustomBackButton from "@/components/CustomBackButton";
@@ -9,6 +16,8 @@ import * as ImagePicker from "expo-image-picker";
 import CustomButton from "@/components/CustomButton";
 import { Link } from "expo-router";
 import AddMemberModal from "@/components/Modals/AddMemberModal";
+import { useDispatch, useSelector } from "react-redux";
+import { setMembersList } from "@/redux/groupSlice";
 const CreateGroup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -16,8 +25,10 @@ const CreateGroup = () => {
     groupPicture: "",
   });
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const { membersList } = useSelector((state) => state.group);
   const handleImagePicker = async () => {
     try {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -34,12 +45,14 @@ const CreateGroup = () => {
         base64: true,
       });
 
-      console.log("resulr", result);
+      // console.log("resulr", result);
       setFormData({ ...formData, groupPicture: result.assets[0].base64 });
     } catch (error) {
       console.log(error);
     }
   };
+  
+  console.log("memer", membersList)
 
   return (
     <View style={styles.container}>
@@ -98,18 +111,55 @@ const CreateGroup = () => {
         </Text>
       </View>
 
+      
+
       <View style={styles.addMember}>
         <Text style={styles.memberText}>Add Member</Text>
 
         <TouchableOpacity
           // style={styles.addMemberBtn}
           style={styles.addMemberBtn}
-          onPress={() => { console.log("copern modal"), setModalVisible(true)}}
+          onPress={() => {
+            console.log("copern modal"), setModalVisible(true);
+          }}
         >
           <Ionicons name="add" size={20} color={Colors.background} />
         </TouchableOpacity>
       </View>
 
+
+      {membersList.length > 0 && (
+        <FlatList
+        horizontal
+        
+          data={membersList}
+          key={(item) => item.id}
+          renderItem={({ item }) => (
+            <View>
+              <Image
+                source={{ uri: item.profilePicture }}
+                style={styles.profilePicture}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(
+                    setMembersList((prev) =>
+                      prev.filter((member) => member._id !== item._id)
+                    )
+                  );
+                }}
+              >
+                <Ionicons
+                  name="close-circle-outline"
+                  size={18}
+                  color={Colors.palette.textSecondary}
+                  style={{ position: "absolute", right: 0, top: 0 }}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      )}
       <CustomButton
         text="Create"
         style={styles.createBtn}
@@ -233,5 +283,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  profilePicture: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
   },
 });

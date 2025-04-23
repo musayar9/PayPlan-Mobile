@@ -19,12 +19,12 @@ import { StatusBar } from "expo-status-bar";
 const { width, height } = Dimensions.get("screen");
 const Home = () => {
   const { user, token } = useSelector((state) => state.auth);
-  console.log("user", user);
+  // console.log("user", user);
 
   const clickToken = () => {
     AsyncStorage.removeItem("token");
   };
-  console.log("token", token);
+  // console.log("token", token);
   
   
   return (

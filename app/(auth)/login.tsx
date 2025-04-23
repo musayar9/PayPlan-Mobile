@@ -43,10 +43,10 @@ const Login = () => {
 
     await dispatch(login(data));
   };
-  console.log("user", user);
-  console.log("error", error);
-  console.log("mesassa", message);
-  console.log("token", token);
+  // console.log("user", user);
+  // console.log("error", error);
+  // console.log("mesassa", message);
+  // console.log("token", token);
   return (
     <View style={styles.container}>
       <AuthHeader

@@ -1,4 +1,5 @@
 import { createGroup } from "@/services/group/groupService";
+import { User } from "@/types/authType";
 import { createSlice } from "@reduxjs/toolkit";
 import { isLoading } from "expo-font";
 interface GroupState {
@@ -6,6 +7,7 @@ interface GroupState {
   isLoading: boolean;
   error: null;
   message: string;
+  membersList: User[];
 }
 
 const initialState = {
@@ -13,12 +15,17 @@ const initialState = {
   isLoading: false,
   error: null,
   message: "",
+  membersList: [],
 };
 
 const groupSlice = createSlice({
   name: "group",
   initialState,
-  reducers: {},
+  reducers: {
+    setMembersList: (state, action) => {
+      state.membersList = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createGroup.pending, (state) => {
@@ -39,3 +46,6 @@ const groupSlice = createSlice({
       });
   },
 });
+
+export const { setMembersList } = groupSlice.actions;
+export default groupSlice.reducer;

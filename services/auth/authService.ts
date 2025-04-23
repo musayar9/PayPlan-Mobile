@@ -17,10 +17,10 @@ interface LoginData {
 export const register = createAsyncThunk(
   "user/register",
   async (data: RegisterData, { rejectWithValue }) => {
-    console.log("data", data);
+    // console.log("data", data);
     try {
       const response = await api.post("/api/v1/auth/register", data);
-      console.log("response", response.data);
+      // console.log("response", response.data);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -37,10 +37,10 @@ export const register = createAsyncThunk(
 export const login = createAsyncThunk(
   "user/login",
   async (data:LoginData, { rejectWithValue }) => {
-    console.log("data", data);
+    // console.log("data", data);
     try {
       const response = await api.post("/api/v1/auth/login", data);
-      console.log("respınse", response.data);
+      // console.log("respınse", response.data);
       return response.data;
     } catch (error) {
       console.log("errorersres", error);
