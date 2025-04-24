@@ -6,7 +6,8 @@ const Colors = {
   textSecondary: "#8E8E93",
   success: "#34C759",
   error: "#FF3B30",
-
+  gray:"#e5e7eb",
+  lightGray: "#F2F2F7",
   palette: {
     primary: "#3B82F6",
     success: "#10B981",

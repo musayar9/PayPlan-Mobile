@@ -52,6 +52,16 @@ const RenderItem = ({
     }
   };
 
+  useEffect(() => {
+
+    // return;
+
+    const isMember = membersList?.some((menubar) => menubar._id === item._id);
+    if (isMember) {
+      setSelection(true);
+    }
+  }, [user, membersList]);
+
   return (
     <View style={styles.memberContainer}>
       <CheckBox
@@ -103,7 +113,7 @@ const AddMemberModal = ({
       fetchUsers();
     }
   }, [modalVisible]);
-  
+
   return (
     <SafeAreaView style={styles.centeredView}>
       <Modal
@@ -194,16 +204,11 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 20,
-
-    // elevation: 2,
     width: 40,
     height: 40,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    // position: "absolute",
-    // right: 20,
-    // top: 15,
   },
   buttonOpen: {
     backgroundColor: "#F194FF",

@@ -1,12 +1,15 @@
 import {
   FlatList,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import CustomBackButton from "@/components/CustomBackButton";
 import Colors from "@/constants/Colors";
@@ -18,6 +21,8 @@ import { Link } from "expo-router";
 import AddMemberModal from "@/components/Modals/AddMemberModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setMembersList } from "@/redux/groupSlice";
+import { User } from "@/types/authType";
+import { AppDispatch, RootState } from "@/redux/store";
 const CreateGroup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -25,10 +30,11 @@ const CreateGroup = () => {
     groupPicture: "",
   });
 
-  const dispatch = useDispatch();
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
   const [modalVisible, setModalVisible] = useState(false);
   const { membersList } = useSelector((state) => state.group);
+
   const handleImagePicker = async () => {
     try {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -51,126 +57,176 @@ const CreateGroup = () => {
       console.log(error);
     }
   };
-  
-  console.log("memer", membersList)
 
+  console.log("memer", membersList);
+
+  const handleMemberRemove = (itemValue: User) => {
+    const list = membersList?.filter((member) => member._id !== itemValue._id);
+    dispatch(setMembersList(list));
+  };
+
+  const handleCreateGroup = () => {
+    const groupData = {
+      name: formData.name,
+      description: formData.description,
+      groupPicture: formData.groupPicture,
+      members: membersList.map((member) => member._id),
+      createdBy: "", // Replace with actual user ID
+    };
+  };
+
+  useEffect(() => {
+    if (user?._id && !membersList.some((member) => member._id === user._id)) {
+      const list = [...membersList, user];
+      dispatch(setMembersList(list));
+    }
+  }, []);
+
+  useEffect(() => {
+    const dismissKeyboard = () => Keyboard.dismiss();
+    const keyboardListener = Keyboard.addListener(
+      "keyboardDidHide",
+      dismissKeyboard
+    );
+
+    return () => {
+      keyboardListener.remove();
+    };
+  }, []);
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
   return (
-    <View style={styles.container}>
-      <StatusBar />
-
-      <View style={styles.head}>
-        <CustomBackButton style={styles.arrowButton} />
-        <Text style={styles.headText}>Create Group</Text>
-      </View>
-
-      <View style={styles.imageContent}>
-        <Image
-          source={{
-            uri: formData.groupPicture
-              ? `data:image/png;base64,${formData.groupPicture}`
-              : "https://img.freepik.com/premium-vector/team-icon-group-people-icon_1199668-1555.jpg?w=360",
-          }}
-          resizeMode="cover"
-          style={styles.groupPicture}
-        />
-
-        <TouchableOpacity style={styles.cameraBtn} onPress={handleImagePicker}>
-          <Ionicons name="camera" />
-        </TouchableOpacity>
-      </View>
-      <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600" }}>
-        {formData.name || "Group Name"}
-      </Text>
-      <View style={styles.forms}>
-        <CustomInput
-          label="Group Name"
-          value={formData.name}
-          onChangeText={(text) => setFormData({ ...formData, name: text })}
-          maxLength={20}
-          placeholder="Enter group name"
-        />
-        <Text style={styles.characterText}>
-          {20 - formData.name.length} characters remaining
-        </Text>
-
-        <CustomInput
-          label="Group Description"
-          numberOfLines={4}
-          inputHeight={{ height: 150 }}
-          value={formData.description}
-          textAlignVertical="top"
-          maxLength={200}
-          multiline={true}
-          placeholder="Tell us about your group"
-          onChangeText={(text) =>
-            setFormData({ ...formData, description: text })
-          }
-        />
-        <Text style={styles.characterText}>
-          {200 - formData.description.length} characters remaining
-        </Text>
-      </View>
-
+  
+    <TouchableWithoutFeedback
+      onPress={()=>Keyboard.dismiss()}
       
+    >
+      <View style={styles.container}>
+        <StatusBar />
 
-      <View style={styles.addMember}>
-        <Text style={styles.memberText}>Add Member</Text>
+        <View style={styles.head}>
+          <CustomBackButton style={styles.arrowButton} />
+          <Text style={styles.headText}>Create Group</Text>
+        </View>
 
-        <TouchableOpacity
-          // style={styles.addMemberBtn}
-          style={styles.addMemberBtn}
-          onPress={() => {
-            console.log("copern modal"), setModalVisible(true);
+        <View style={styles.imageContent}>
+          <Image
+            source={{
+              uri: formData.groupPicture
+                ? `data:image/png;base64,${formData.groupPicture}`
+                : "https://img.freepik.com/premium-vector/team-icon-group-people-icon_1199668-1555.jpg?w=360",
+            }}
+            resizeMode="cover"
+            style={styles.groupPicture}
+          />
+
+          <TouchableOpacity
+            style={styles.cameraBtn}
+            onPress={handleImagePicker}
+          >
+            <Ionicons name="camera" />
+          </TouchableOpacity>
+        </View>
+        <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600" }}>
+          {formData.name || "Group Name"}
+        </Text>
+        <View style={styles.forms}>
+          <CustomInput
+            label="Group Name"
+            value={formData.name}
+            onChangeText={(text) => setFormData({ ...formData, name: text })}
+            maxLength={20}
+            placeholder="Enter group name"
+          />
+          <Text style={styles.characterText}>
+            {20 - formData.name.length} characters remaining
+          </Text>
+
+          <CustomInput
+            label="Group Description"
+            numberOfLines={4}
+            inputHeight={{ height: 150 }}
+            value={formData.description}
+            textAlignVertical="top"
+            maxLength={200}
+            multiline={true}
+            
+            
+            placeholder="Tell us about your group"
+            onChangeText={(text) =>
+              setFormData({ ...formData, description: text })
+            }
+          />
+          <Text style={styles.characterText}>
+            {200 - formData.description.length} characters remaining
+          </Text>
+        </View>
+
+        <View
+          style={{
+            gap: 10,
+            paddingBottom: 20,
+            backgroundColor: membersList?.length > 0 ? Colors.gray : "",
+            borderRadius: 12,
+            paddingHorizontal: 10,
           }}
         >
-          <Ionicons name="add" size={20} color={Colors.background} />
-        </TouchableOpacity>
-      </View>
+          <View style={styles.addMember}>
+            <Text style={styles.memberText}>Add Member</Text>
 
+            <TouchableOpacity
+              // style={styles.addMemberBtn}
+              style={styles.addMemberBtn}
+              onPress={() => {
+                console.log("copern modal"), setModalVisible(true);
+              }}
+            >
+              <Ionicons name="add" size={20} color={Colors.background} />
+            </TouchableOpacity>
+          </View>
 
-      {membersList.length > 0 && (
-        <FlatList
-        horizontal
-        
-          data={membersList}
-          key={(item) => item.id}
-          renderItem={({ item }) => (
-            <View>
-              <Image
-                source={{ uri: item.profilePicture }}
-                style={styles.profilePicture}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  dispatch(
-                    setMembersList((prev) =>
-                      prev.filter((member) => member._id !== item._id)
-                    )
-                  );
-                }}
-              >
-                <Ionicons
-                  name="close-circle-outline"
-                  size={18}
-                  color={Colors.palette.textSecondary}
-                  style={{ position: "absolute", right: 0, top: 0 }}
-                />
-              </TouchableOpacity>
-            </View>
+          {membersList.length > 0 && (
+            <FlatList
+              horizontal
+              data={membersList}
+              key={(item) => item.id}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    paddingHorizontal: 4,
+                    gap: 10,
+                  }}
+                >
+                  <Image
+                    source={{ uri: item?.profilePicture }}
+                    style={styles.profilePicture}
+                  />
+                  <TouchableOpacity
+                    style={styles.removeBtn}
+                    onPress={() => {
+                      handleMemberRemove(item);
+                    }}
+                  >
+                    <Ionicons name="close" size={16} color={Colors.error} />
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
           )}
+        </View>
+        <CustomButton
+          text="Create"
+          style={styles.createBtn}
+          textColor={Colors.background}
         />
-      )}
-      <CustomButton
-        text="Create"
-        style={styles.createBtn}
-        textColor={Colors.background}
-      />
 
-      <AddMemberModal
-        setModalVisible={setModalVisible}
-        modalVisible={modalVisible}
-      />
-    </View>
+        <AddMemberModal
+          setModalVisible={setModalVisible}
+          modalVisible={modalVisible}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -184,7 +240,7 @@ const styles = StyleSheet.create({
     position: "relative",
 
     backgroundColor: "#fff",
-    gap: 20,
+    gap: 10,
   },
   head: {
     flexDirection: "row",
@@ -270,6 +326,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingTop: 10,
+    // marginTop:-10
   },
   memberText: {
     color: Colors.palette.textPrimary,
@@ -278,16 +336,28 @@ const styles = StyleSheet.create({
   },
   addMemberBtn: {
     backgroundColor: Colors.palette.accent,
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
   },
 
   profilePicture: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     borderRadius: 50,
+  },
+
+  removeBtn: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    backgroundColor: Colors.palette.backgroundLight,
+    padding: 2,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
   },
 });
