@@ -1,9 +1,10 @@
-import { createGroup } from "@/services/group/groupService";
+import { createGroup, getMyGroups } from "@/services/group/groupService";
 import { User } from "@/types/authType";
+import { GroupsType } from "@/types/groupsType";
 import { createSlice } from "@reduxjs/toolkit";
 import { isLoading } from "expo-font";
 interface GroupState {
-  group: null;
+  group: GroupsType[] | null;
   isLoading: boolean;
   error: null;
   message: string;
@@ -25,21 +26,22 @@ const groupSlice = createSlice({
     setMembersList: (state, action) => {
       state.membersList = action.payload;
     },
+    cleanMembersList: (state) => {
+      state.membersList = [];
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createGroup.pending, (state) => {
+      .addCase(getMyGroups.pending, (state) => {
         state.isLoading = true;
         state.error = null;
         state.message = "";
       })
-      .addCase(createGroup.fulfilled, (state, action) => {
+      .addCase(getMyGroups.fulfilled, (state, action) => {
         state.isLoading = false;
-        const { group, message } = action.payload;
-        state.group = group;
-        state.message = message;
+        state.group = action.payload;
       })
-      .addCase(createGroup.rejected, (state, action) => {
+      .addCase(getMyGroups.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
         state.message = action.error.message;
@@ -47,5 +49,5 @@ const groupSlice = createSlice({
   },
 });
 
-export const { setMembersList } = groupSlice.actions;
+export const { setMembersList, cleanMembersList } = groupSlice.actions;
 export default groupSlice.reducer;

@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton from "@/components/CustomButton";
 import Colors from "@/constants/Colors";
@@ -16,17 +16,22 @@ import { formateDate } from "@/utils/functions";
 import LottieView from "lottie-react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
+import Groups from "@/components/Home/Groups";
+import { useFocusEffect } from "expo-router";
+import { AppDispatch } from "@/redux/store";
+import { getMyGroups } from "@/services/group/groupService";
 const { width, height } = Dimensions.get("screen");
 const Home = () => {
   const { user, token } = useSelector((state) => state.auth);
+  const { group, isLoading, error } = useSelector(
+    (state: RootState) => state.group
+  );
   // console.log("user", user);
-
+  const dispatch = useDispatch<AppDispatch>();
   const clickToken = () => {
     AsyncStorage.removeItem("token");
   };
-  // console.log("token", token);
-  
-  
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.primary} />
@@ -96,7 +101,7 @@ const Home = () => {
         </View>
       </View>
 
-      <CustomButton title="Logout" onPress={clickToken} />
+      <Groups />
     </View>
   );
 };

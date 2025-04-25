@@ -17,12 +17,14 @@ import CustomInput from "@/components/CustomInput";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import AddMemberModal from "@/components/Modals/AddMemberModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setMembersList } from "@/redux/groupSlice";
 import { User } from "@/types/authType";
 import { AppDispatch, RootState } from "@/redux/store";
+import { createGroup } from "@/services/group/groupService";
+import { api } from "@/utils/api";
 const CreateGroup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -33,8 +35,11 @@ const CreateGroup = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
   const [modalVisible, setModalVisible] = useState(false);
+  const [group, setGroup] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { membersList } = useSelector((state) => state.group);
-
+  const router = useRouter();
   const handleImagePicker = async () => {
     try {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -50,31 +55,68 @@ const CreateGroup = () => {
         quality: 1,
         base64: true,
       });
+      console.log("result", result);
 
-      // console.log("resulr", result);
-      setFormData({ ...formData, groupPicture: result.assets[0].base64 });
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setFormData({ ...formData, groupPicture: result.assets[0].base64 });
+      }
     } catch (error) {
       console.log(error);
     }
   };
-
-  console.log("memer", membersList);
 
   const handleMemberRemove = (itemValue: User) => {
     const list = membersList?.filter((member) => member._id !== itemValue._id);
     dispatch(setMembersList(list));
   };
 
-  const handleCreateGroup = () => {
+  const handleCreateGroup = async () => {
     const groupData = {
       name: formData.name,
       description: formData.description,
       groupPicture: formData.groupPicture,
       members: membersList.map((member) => member._id),
-      createdBy: "", // Replace with actual user ID
+      createdBy: user?._id, // Replace with actual user ID
     };
-  };
+    // console.log("grouppDa", JSON.stringify(groupData, null, 2));
+    // await dispatch(createGroup(groupData));
+    // if (group) {
+    //   setFormData({
+    //     name: "",
+    //     description: "",
+    //     groupPicture: "",
+    //   });
+    //   await dispatch(setMembersList([]));
+    //   router.push("/home");
+    // }
 
+    try {
+      setIsLoading(true);
+      const response = await api.post("/api/v1/groups", groupData);
+      if (response.status === 201) {
+        setFormData({
+          name: "",
+          description: "",
+          groupPicture: "",
+        });
+        setGroup(response.data.group);
+        await dispatch(setMembersList([]));
+        router.push("/home");
+      }
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.message || "Bilinmeyen bir hata oluştu.";
+        setError(message);
+      } else {
+        setError("Bilinmeyen bir hata oluştu.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  console.log("erro", error);
   useEffect(() => {
     if (user?._id && !membersList.some((member) => member._id === user._id)) {
       const list = [...membersList, user];
@@ -82,26 +124,23 @@ const CreateGroup = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const dismissKeyboard = () => Keyboard.dismiss();
-    const keyboardListener = Keyboard.addListener(
-      "keyboardDidHide",
-      dismissKeyboard
-    );
+  // useEffect(() => {
+  //   const dismissKeyboard = () => Keyboard.dismiss();
+  //   const keyboardListener = Keyboard.addListener(
+  //     "keyboardDidHide",
+  //     dismissKeyboard
+  //   );
 
-    return () => {
-      keyboardListener.remove();
-    };
-  }, []);
+  //   return () => {
+  //     keyboardListener.remove();
+  //   };
+  // }, []);
   const handleDismissKeyboard = () => {
     Keyboard.dismiss();
   };
+
   return (
-  
-    <TouchableWithoutFeedback
-      onPress={()=>Keyboard.dismiss()}
-      
-    >
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <StatusBar />
 
@@ -151,8 +190,6 @@ const CreateGroup = () => {
             textAlignVertical="top"
             maxLength={200}
             multiline={true}
-            
-            
             placeholder="Tell us about your group"
             onChangeText={(text) =>
               setFormData({ ...formData, description: text })
@@ -164,13 +201,10 @@ const CreateGroup = () => {
         </View>
 
         <View
-          style={{
-            gap: 10,
-            paddingBottom: 20,
-            backgroundColor: membersList?.length > 0 ? Colors.gray : "",
-            borderRadius: 12,
-            paddingHorizontal: 10,
-          }}
+          style={[
+            styles.memberField,
+            { backgroundColor: membersList?.length > 1 ? Colors.gray : "" },
+          ]}
         >
           <View style={styles.addMember}>
             <Text style={styles.memberText}>Add Member</Text>
@@ -191,34 +225,40 @@ const CreateGroup = () => {
               horizontal
               data={membersList}
               key={(item) => item.id}
-              renderItem={({ item }) => (
-                <View
-                  style={{
-                    paddingHorizontal: 4,
-                    gap: 10,
-                  }}
-                >
-                  <Image
-                    source={{ uri: item?.profilePicture }}
-                    style={styles.profilePicture}
-                  />
-                  <TouchableOpacity
-                    style={styles.removeBtn}
-                    onPress={() => {
-                      handleMemberRemove(item);
+              renderItem={({ item }) => {
+                if (item._id === user?._id) return null;
+
+                return (
+                  <View
+                    style={{
+                      paddingHorizontal: 4,
+                      gap: 10,
                     }}
                   >
-                    <Ionicons name="close" size={16} color={Colors.error} />
-                  </TouchableOpacity>
-                </View>
-              )}
+                    <Image
+                      source={{ uri: item?.profilePicture }}
+                      style={styles.profilePicture}
+                    />
+                    <TouchableOpacity
+                      style={styles.removeBtn}
+                      onPress={() => {
+                        handleMemberRemove(item);
+                      }}
+                    >
+                      <Ionicons name="close" size={16} color={Colors.error} />
+                    </TouchableOpacity>
+                  </View>
+                );
+              }}
             />
           )}
         </View>
         <CustomButton
-          text="Create"
+          text={isLoading ? "Creating..." : "Create Group"}
+          disabled={isLoading}
           style={styles.createBtn}
           textColor={Colors.background}
+          onPress={handleCreateGroup}
         />
 
         <AddMemberModal
@@ -359,5 +399,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
+  },
+  memberField: {
+    gap: 10,
+    paddingBottom: 20,
+
+    borderRadius: 12,
+    paddingHorizontal: 10,
   },
 });
