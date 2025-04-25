@@ -63,13 +63,11 @@ export default function Index() {
         <Text style={styles.headerText}>PayPlan</Text>
         {/* <Text style={styles.subHead}> Hoş Geldiniz</Text> */}
         <Text style={styles.contentText}>
-          Uygulamanızla tanışın ve hayatınızı kolaylaştırın. Görevlerinizi
-          kolayca takip edebilir, yeni projeler oluşturabilirsiniz.
-        </Text>
+        Get started with our app and simplify your life. Easily keep track of your tasks and create new projects effortlessly        </Text>
       </View>
       <View style={{ flex: 0.3 }} />
       <CustomButton
-        text="Başlayalım"
+        text="Let's Start"
         style={styles.button}
         onPress={() => router.push("/(auth)/login")}
       />

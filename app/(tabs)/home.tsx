@@ -116,19 +116,21 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: width * 0.2,
-    paddingBottom: width * 0.2,
+    paddingBottom: width * 0.1,
+    borderBottomLeftRadius:60,
+    borderBottomRightRadius:60,
     paddingHorizontal: 15,
     gap: 10,
     backgroundColor: Colors.primary,
-    height: height * 0.3,
+    height: height * 0.28,
     shadowColor: "#111",
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 4,
   },
 
   headBiggerText: {
