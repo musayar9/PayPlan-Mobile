@@ -29,6 +29,9 @@ const groupSlice = createSlice({
     cleanMembersList: (state) => {
       state.membersList = [];
     },
+    searchFilterGroup: (state, action) => {
+      state.group = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -49,5 +52,5 @@ const groupSlice = createSlice({
   },
 });
 
-export const { setMembersList, cleanMembersList } = groupSlice.actions;
+export const { setMembersList, cleanMembersList, searchFilterGroup } = groupSlice.actions;
 export default groupSlice.reducer;

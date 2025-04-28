@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={Colors.primary} />
+      <StatusBar backgroundColor={Colors.primary}  />
       <View style={styles.content}>
         <View style={[styles.headContent, styles.headLeft]}>
           <Text style={styles.headBiggerText}>PayPlan</Text>
@@ -111,7 +111,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
     position: "relative",
   },
   content: {

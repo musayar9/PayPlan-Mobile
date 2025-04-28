@@ -269,4 +269,5 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: Colors.textPrimary,
   },
+  
 });

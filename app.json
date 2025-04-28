@@ -4,8 +4,11 @@
     "slug": "payplan",
     "version": "1.0.0",
     "orientation": "portrait",
-    "backgroundColor": "#fff",
+    "backgroundColor": "#ffffff",
     "icon": "./assets/images/icon.png",
+    "androidStatusBar": {
+    "backgroundColor": "#ffffff"
+    },
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
 
@@ -16,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#fff"
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
