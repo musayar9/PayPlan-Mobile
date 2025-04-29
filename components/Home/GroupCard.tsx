@@ -1,8 +1,9 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { GroupsType } from "@/types/groupsType";
 import Colors from "@/constants/Colors";
 import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const GroupCard = ({ item }: { item: GroupsType }) => {
   return (
@@ -44,14 +45,28 @@ const GroupCard = ({ item }: { item: GroupsType }) => {
             ))}
           </View>
 
-          <View>
-            <Link
-              href={{
-                pathname: "/group/[id]",
-                params: { id: item._id },
+          <Link
+            href={{
+              pathname: "/group/[id]",
+              params: { id: item._id },
+            }}
+            asChild
+          >
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: 2,
+                bottom: 4,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
               }}
-            >View Details</Link>
-          </View>
+            >
+              <Text style={{ color: Colors.primary, fontSize: 12 }}>View Detail</Text>
+              <Ionicons name="arrow-redo" color={Colors.primary} />
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </View>
