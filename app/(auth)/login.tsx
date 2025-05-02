@@ -112,7 +112,7 @@ const { width, height } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightBlur,
   },
   textField: {
     color: Colors.primary,

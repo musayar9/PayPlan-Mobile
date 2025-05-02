@@ -8,6 +8,16 @@ const Colors = {
   error: "#FF3B30",
   gray:"#e5e7eb",
   lightGray: "#F2F2F7",
+  lightBlur:"#eff6ff",
+  red400:"#ffc9c9",
+  red300:"#ffa2a2",
+  red500:"#fb2c36",
+  red600:"#e7000b",
+  blue400:"#83c5be",
+  blue600:"#0070f3",
+  green400:"#83c5be",
+  green600:"#0070f3",
+
   palette: {
     primary: "#3B82F6",
     success: "#10B981",

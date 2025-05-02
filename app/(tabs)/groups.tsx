@@ -35,25 +35,26 @@ const Groups = () => {
   return (
     <GroupLayout isGroupPage={true} headStyle={styles.headStyle}>
       <View style={styles.searchContainer}>
-      <Ionicons name="search" size={20} color={Colors.textSecondary} />
-      <TextInput
-        style={styles.input}
-        placeholder="Filter by group name"
-        placeholderTextColor={Colors.textSecondary}
-        value={searchMember}
-        onChangeText={(text) => setSearchMember(text)}
-        autoCapitalize="none"
-        autoCorrect={true}
-        textTransform="lowercase"
-      />
+        <Ionicons name="search" size={20} color={Colors.textSecondary} />
+        <TextInput
+          style={styles.input}
+          placeholder="Filter by group name"
+          placeholderTextColor={Colors.textSecondary}
+          value={searchMember}
+          onChangeText={(text) => setSearchMember(text)}
+          autoCapitalize="none"
+          autoCorrect={true}
+          textTransform="lowercase"
+        />
       </View>
 
       <FlatList
-      data={filterGroup}
-      style={{ marginTop: 20, flex: 1 }}
-      keyExtractor={(item) => item._id.toString()}
-      renderItem={({ item }) => <GroupCard item={item} />}
-      contentContainerStyle={{ flexGrow: 1 }}
+        data={filterGroup}
+        style={{ marginTop: 20 }}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item._id.toString()}
+        renderItem={({ item }) => <GroupCard item={item} />}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
       />
     </GroupLayout>
   );
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     // marginVertical: 50,
     paddingTop: 80,
     paddingHorizontal: 15,
-    backgroundColor: "#ffffff",
+    backgroundColor: Colors.lightBlur,
     position: "relative",
   },
 
@@ -76,9 +77,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     gap: 5,
-    borderWidth: 1,
+    // borderWidth: 1,
     paddingVertical: 6,
-    borderColor: Colors.gray,
+    //borderColor: Colors.gray,
     borderRadius: 12,
     paddingHorizontal: 12,
     marginVertical: 10,

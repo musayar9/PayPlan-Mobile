@@ -1,4 +1,8 @@
-import { createGroup, getMyGroups } from "@/services/group/groupService";
+import {
+  createGroup,
+  getGroupById,
+  getMyGroups,
+} from "@/services/group/groupService";
 import { User } from "@/types/authType";
 import { GroupsType } from "@/types/groupsType";
 import { createSlice } from "@reduxjs/toolkit";
@@ -9,6 +13,7 @@ interface GroupState {
   error: null;
   message: string;
   membersList: User[];
+  groupDetail: GroupsType | null;
 }
 
 const initialState = {
@@ -17,6 +22,7 @@ const initialState = {
   error: null,
   message: "",
   membersList: [],
+  groupDetail: null,
 };
 
 const groupSlice = createSlice({
@@ -48,9 +54,22 @@ const groupSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
         state.message = action.error.message;
+      })
+      .addCase(getGroupById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getGroupById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.groupDetail = action.payload;
+      })
+      .addCase(getGroupById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { setMembersList, cleanMembersList, searchFilterGroup } = groupSlice.actions;
+export const { setMembersList, cleanMembersList, searchFilterGroup } =
+  groupSlice.actions;
 export default groupSlice.reducer;

@@ -10,7 +10,7 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-const CustomBackButton = ({ style }: { style: StyleProp }) => {
+const CustomBackButton = ({ style }: { style?: StyleProp<any> }) => {
   const router = useRouter();
   return (
     <TouchableOpacity

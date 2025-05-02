@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
+import Colors from "@/constants/Colors";
 
 const OAuthButton = () => {
   return (
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     borderColor: "#90a1b9",
     borderRadius: 10,
     height: 48,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightBlur,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

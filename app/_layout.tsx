@@ -19,6 +19,11 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="group/[id]" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="newtask/[groupId]"
+            options={{ headerShown: false }}
+          />
+
           {/* <Stack.Screen
           name="modal"
           options={{

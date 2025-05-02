@@ -16,7 +16,7 @@ interface CustomInputProps extends TextInputProps {
   value?: string;
   isPassword?: boolean;
   onPress: () => void;
-  width?: string | number;
+  width?: string | number  | undefined;
   status?: string;
   numberOfLines?: number;
   inputHeight?:number
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 8,
     left: 5,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightBlur,
     color: "#45556c",
     zIndex: 1,
     width: "auto",
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 28,
     right: 10,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightBlur,
     padding: 5,
     borderRadius: 50,
     borderWidth: 1,

@@ -24,11 +24,13 @@ const Groups = () => {
   return (
     <GroupLayout headStyle={styles.headStyle}>
       <FlatList
-
+        horizontal={false}
         data={group?.slice(0, 3)}
-        style={{ marginTop: 20 }}
+        style={{ marginVertical: 20 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
         keyExtractor={(item) => item._id.toString()}
         renderItem={({ item }) => <GroupCard item={item} />}
+        showsVerticalScrollIndicator={false}
       />
     </GroupLayout>
   );

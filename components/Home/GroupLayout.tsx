@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,StatusBar } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { StatusBar } from "expo-status-bar";
+
 
 interface GroupPageProps {
   isGroupPage?: boolean;
@@ -17,7 +17,7 @@ const GroupLayout = ({ children, isGroupPage, headStyle }: GroupPageProps) => {
   const { group } = useSelector((state: RootState) => state.group);
   return (
     <View style={headStyle}>
-      {isGroupPage && <StatusBar backgroundColor={"#ffffff"} />}
+      {isGroupPage && <StatusBar backgroundColor={Colors.lightBlur} translucent={true}   />}
       <View
         style={{
           flexDirection: "row",
@@ -50,7 +50,7 @@ const GroupLayout = ({ children, isGroupPage, headStyle }: GroupPageProps) => {
           <Link
             href={"/(tabs)/createGroup"}
             style={{
-              backgroundColor: Colors.gray,
+              backgroundColor: Colors.background,
               padding: 8,
               borderRadius: 12,
             }}

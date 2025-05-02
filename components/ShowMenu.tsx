@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import Colors from "@/constants/Colors"
 
 interface ShowMenuProps {
   showMenu: boolean;
@@ -37,7 +37,16 @@ const ShowMenu = () => {
           },
         ]}
       >
-        <Text>ShowMenu</Text>
+        <View style={styles.editBtn}>
+          <Ionicons name="pencil-sharp" size={18}/>
+          <Text>Update</Text>
+
+        </View>
+        <View style={styles.editBtn}>
+          <Ionicons name="trash" size={18}/>
+          <Text>Delete</Text>
+
+        </View>
       </Animated.View>
     </View>
   );
@@ -54,7 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     zIndex: 1000,
-    width: 200,
+    width: 150,
     height: 100,
     shadowColor: "#000",
     shadowOffset: {
@@ -64,5 +73,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 4,
+    //alignItems:"center",
+    //justifyContent:"flex-start"
   },
+  editBtn:{
+    paddingVertical:10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent:"flex-start",
+    gap:4,
+    borderBottomWidth:1,
+    borderBottomColor:Colors.gray
+
+  }
 });

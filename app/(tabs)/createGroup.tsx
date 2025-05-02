@@ -167,7 +167,7 @@ const CreateGroup = () => {
             <Ionicons name="camera" />
           </TouchableOpacity>
         </View>
-        <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600" }}>
+        <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600",  }}>
           {formData.name || "Group Name"}
         </Text>
         <View style={styles.forms}>
@@ -203,7 +203,7 @@ const CreateGroup = () => {
         <View
           style={[
             styles.memberField,
-            { backgroundColor: membersList?.length > 1 ? Colors.gray : "" },
+            { backgroundColor: membersList?.length > 1 ? Colors.background : "" },
           ]}
         >
           <View style={styles.addMember}>
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     position: "relative",
 
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightBlur,
     gap: 10,
   },
   head: {
@@ -322,8 +322,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderWidth: 1,
-    borderColor: Colors.palette.border,
+   // borderWidth: 1,
+    // borderColor: Colors.palette.border,
     padding: 20,
     shadowColor: "#000",
     backgroundColor: "#fff",
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   },
   memberText: {
     color: Colors.palette.textPrimary,
-    size: 16,
+    fontSize: 16,
     fontWeight: 500,
   },
   addMemberBtn: {
