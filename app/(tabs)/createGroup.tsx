@@ -275,7 +275,7 @@ export default CreateGroup;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 50,
+    paddingVertical: 45,
     paddingHorizontal: 15,
     position: "relative",
 
@@ -283,7 +283,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
-  forms: { gap: 12 },
+  forms: {
+    gap: 10,
+    backgroundColor: Colors.background,
+    padding: 10,
+    borderRadius: 10,
+  },
 
   imageContent: {
     alignItems: "center",

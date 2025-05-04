@@ -23,12 +23,15 @@ import { setMembersList } from "@/redux/groupSlice";
 interface AddMemberModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  status: string;
 }
 
 const RenderItem = ({
   item,
+  status,
 }: {
   item: User;
+  status?: string;
   // setMembersList: React.Dispatch<SetStateAction<User[]>>;
 }) => {
   const [isSelected, setSelection] = useState(false);
@@ -38,17 +41,32 @@ const RenderItem = ({
   if (item._id === user?._id) return null;
 
   const handleSelect = (itemValue: User) => {
-    if (isSelected) {
-      setSelection(false);
-      const list = membersList?.filter(
-        (member) => member._id !== itemValue._id
-      );
-      dispatch(setMembersList(list));
+    if (status === "create_task") {
+      if (isSelected) {
+        setSelection(false);
+        const list = membersList?.filter(
+          (member) => member._id !== itemValue._id
+        );
+        dispatch(setMembersList(list));
+      } else {
+        if (membersList.length === 0) {
+          setSelection(true);
+          const list = [itemValue];
+          dispatch(setMembersList(list));
+        }
+      }
     } else {
-      setSelection(true);
-      const list = [...membersList, itemValue];
-
-      dispatch(setMembersList(list));
+      if (isSelected) {
+        setSelection(false);
+        const list = membersList?.filter(
+          (member) => member._id !== itemValue._id
+        );
+        dispatch(setMembersList(list));
+      } else {
+        setSelection(true);
+        const list = [...membersList, itemValue];
+        dispatch(setMembersList(list));
+      }
     }
   };
 
@@ -68,6 +86,12 @@ const RenderItem = ({
         onValueChange={() => handleSelect(item)}
         // onPress={() => handleSelect(item)}
         style={styles.checkbox}
+        disabled={
+          status === "create_task" &&
+          membersList?.some((member) => member._id !== item._id)
+            ? true
+            : false
+        }
       />
       <Image
         source={{ uri: item?.profilePicture }}
@@ -86,6 +110,7 @@ const RenderItem = ({
 const AddMemberModal = ({
   modalVisible,
   setModalVisible,
+  status,
 }: AddMemberModalProps) => {
   const [searchMember, setSearchMember] = useState("");
   const {} = useSelector((state) => state.group);
@@ -164,7 +189,9 @@ const AddMemberModal = ({
             <FlatList
               data={users}
               keyExtractor={(item) => item._id}
-              renderItem={({ item }) => <RenderItem item={item} />}
+              renderItem={({ item }) => (
+                <RenderItem item={item} status={status} />
+              )}
             />
           </View>
         </View>
@@ -180,7 +207,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-   
+
     zIndex: 100,
   },
   modalView: {

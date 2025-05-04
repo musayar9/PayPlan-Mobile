@@ -4,8 +4,12 @@ import { GroupsType } from "@/types/groupsType";
 import Colors from "@/constants/Colors";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { setMembersList } from "@/redux/groupSlice";
 
 const GroupCard = ({ item }: { item: GroupsType }) => {
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <View style={styles.container}>
       <Image
@@ -17,7 +21,7 @@ const GroupCard = ({ item }: { item: GroupsType }) => {
         style={styles.groupImage}
       />
       <View style={styles.groupContent}>
-        <Text style={{ color: Colors.palette.textSecondary, fontSize:12 }}>
+        <Text style={{ color: Colors.palette.textSecondary, fontSize: 12 }}>
           {item.members.length}
         </Text>
       </View>
@@ -28,6 +32,9 @@ const GroupCard = ({ item }: { item: GroupsType }) => {
             href={{
               pathname: "/newtask/[groupId]",
               params: { groupId: item._id },
+            }}
+            onPress={() => {
+              dispatch(setMembersList([]));
             }}
           >
             <TouchableOpacity style={styles.taskBtn}>
@@ -190,7 +197,7 @@ const styles = StyleSheet.create({
     right: 1,
     top: -3,
   },
-  groupDetail:{
-    paddingVertical:8
-  }
+  groupDetail: {
+    paddingVertical: 8,
+  },
 });

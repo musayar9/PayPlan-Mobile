@@ -31,6 +31,7 @@ import TaskLists from "@/components/TaskLists";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getGroupById } from "@/services/group/groupService";
+import AddMemberModal from "@/components/Modals/AddMemberModal";
 
 const GroupDetail = () => {
   const { id } = useLocalSearchParams();
@@ -129,6 +130,8 @@ const GroupDetail = () => {
         </View>
 
         <TaskLists groupId={groupDetail?._id} />
+        
+      
       </ScrollView>
     </SafeAreaView>
   );
