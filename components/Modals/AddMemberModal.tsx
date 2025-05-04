@@ -53,7 +53,6 @@ const RenderItem = ({
   };
 
   useEffect(() => {
-
     // return;
 
     const isMember = membersList?.some((menubar) => menubar._id === item._id);
@@ -181,13 +180,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+   
     zIndex: 100,
   },
   modalView: {
     // margin: 20,
     width: "100%",
     height: "80%",
-    backgroundColor: "white",
+    backgroundColor: Colors.lightBlur,
     borderRadius: 20,
     padding: 20,
     // alignItems: "center",
@@ -269,5 +269,4 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: Colors.textPrimary,
   },
-  
 });

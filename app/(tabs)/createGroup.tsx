@@ -25,6 +25,7 @@ import { User } from "@/types/authType";
 import { AppDispatch, RootState } from "@/redux/store";
 import { createGroup } from "@/services/group/groupService";
 import { api } from "@/utils/api";
+import CustomHeader from "@/components/CustomHeader";
 const CreateGroup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -144,10 +145,7 @@ const CreateGroup = () => {
       <View style={styles.container}>
         <StatusBar />
 
-        <View style={styles.head}>
-          <CustomBackButton style={styles.arrowButton} />
-          <Text style={styles.headText}>Create Group</Text>
-        </View>
+        <CustomHeader subHead="Create Group" />
 
         <View style={styles.imageContent}>
           <Image
@@ -167,7 +165,7 @@ const CreateGroup = () => {
             <Ionicons name="camera" />
           </TouchableOpacity>
         </View>
-        <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600",  }}>
+        <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600" }}>
           {formData.name || "Group Name"}
         </Text>
         <View style={styles.forms}>
@@ -203,7 +201,9 @@ const CreateGroup = () => {
         <View
           style={[
             styles.memberField,
-            { backgroundColor: membersList?.length > 1 ? Colors.background : "" },
+            {
+              backgroundColor: membersList?.length > 1 ? Colors.background : "",
+            },
           ]}
         >
           <View style={styles.addMember}>
@@ -282,35 +282,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightBlur,
     gap: 10,
   },
-  head: {
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-    paddingVertical: 20,
-  },
+
   forms: { gap: 12 },
-  arrowButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 50,
-    // borderWidth: 1,
-    borderColor: Colors.palette.border,
-    shadowColor: "#000",
-    backgroundColor: "#fff",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    elevation: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headText: {
-    fontSize: 20,
-    fontWeight: "500",
-    color: Colors.palette.textPrimary,
-  },
+
   imageContent: {
     alignItems: "center",
     justifyContent: "center",
@@ -322,7 +296,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-   // borderWidth: 1,
+    // borderWidth: 1,
     // borderColor: Colors.palette.border,
     padding: 20,
     shadowColor: "#000",
