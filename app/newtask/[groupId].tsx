@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getGroupById } from "@/services/group/groupService";
@@ -23,6 +23,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { formateDate, formatDates } from "@/utils/functions";
 import AddMemberModal from "@/components/Modals/AddMemberModal";
 import CustomButton from "@/components/CustomButton";
+import axios from "axios";
+import { api } from "@/utils/api";
+import { setMembersList } from "@/redux/groupSlice";
 const CreateTask = () => {
   const { groupId } = useLocalSearchParams();
   const { groupDetail, membersList } = useSelector(
@@ -32,7 +35,13 @@ const CreateTask = () => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+  });
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
@@ -48,12 +57,53 @@ const CreateTask = () => {
     showMode("date");
   };
 
-  console.log("date", date);
   useEffect(() => {
     if (groupId !== groupDetail?.id) {
       dispatch(getGroupById(groupId as string));
     }
   }, [groupId]);
+
+  const handleCreateTask = async () => {
+    if (
+      !formData.title ||
+      !formData.description ||
+      membersList.length === 0 ||
+      !date
+    ) {
+      console.log("Please fill all the fields");
+    }
+
+    try {
+      const taskData = {
+        title: formData.title,
+        description: formData.description,
+        dueDate: date,
+        assignedTo: membersList.map((member) => member._id)[0],
+        group: groupDetail._id,
+      };
+
+      const res = await api.post(`/api/v1/tasks`, taskData);
+
+      console.log("tasj", res.data);
+      if (res.status === 201) {
+        console.log("Task created successfully", res.data);
+        setFormData({
+          title: "",
+          description: "",
+        });
+        setDate(new Date());
+        dispatch(setMembersList([]));
+        router.back();
+      }
+      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log("error", error.response?.data.message);
+      } else {
+        console.log("error", error);
+      }
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -82,9 +132,16 @@ const CreateTask = () => {
         <View style={styles.forms}>
           <CustomInput
             label="Task Title"
-            maxLength={20}
+            maxLength={40}
             placeholder="Enter task title"
+            value={formData.title}
+            onChangeText={(text) => {
+              setFormData({ ...formData, title: text });
+            }}
           />
+          <Text style={styles.characterText}>
+            {40 - formData.title.length} characters remaining
+          </Text>
 
           <CustomInput
             label="Task Description"
@@ -93,7 +150,14 @@ const CreateTask = () => {
             multiline={true}
             placeholder="Enter task description"
             inputHeight={{ height: 150 }}
+            maxLength={500}
+            onChangeText={(text) => {
+              setFormData({ ...formData, description: text });
+            }}
           />
+          <Text style={styles.characterText}>
+            {500 - formData.description.length} characters remaining
+          </Text>
         </View>
 
         <View
@@ -169,6 +233,7 @@ const CreateTask = () => {
           text="Create Task"
           style={styles.createBtn}
           textColor={Colors.background}
+          onPress={handleCreateTask}
         />
       </View>
     </TouchableWithoutFeedback>
@@ -269,5 +334,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 50,
+  },
+  characterText: {
+    fontSize: 11,
+    color: Colors.palette.textSecondary,
+    paddingLeft: 12,
+    marginTop: -8,
   },
 });
