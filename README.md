@@ -1,4 +1,4 @@
-# 🤝 GrupPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
+# 🤝 PayPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
 
 GrupPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
 Tatil planı, alışveriş listesi, ders çalışma grubu ya da bir startup görev panosu gibi birçok senaryoya uyarlanabilir.
