@@ -1,7 +1,7 @@
 # 🤝 PayPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
 PayPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
 Tatil planı, alışveriş listesi, ders çalışma grubu ya da bir startup görev panosu gibi birçok senaryoya uyarlanabilir.
-Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hedefler. 🇹🇷
+
 
 ---
 
