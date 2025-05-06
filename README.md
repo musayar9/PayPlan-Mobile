@@ -1,50 +1,261 @@
-# Welcome to your Expo app 👋
+# 🤝 GrupPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+GrupPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
+Tatil planı, alışveriş listesi, ders çalışma grubu ya da bir startup görev panosu gibi birçok senaryoya uyarlanabilir.
+Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hedefler. 🇹🇷
 
-## Get started
+---
 
-1. Install dependencies
+## 🌟 Özellikler
 
-   ```bash
-   npm install
-   ```
+* ✅ Grup oluşturma (arkadaş, aile, ekip, vb.)
+* ✅ Görev, etkinlik, alışveriş listesi ekleme
+* ✅ Görevleri oylamaya açma: “Bunu kim yapacak?”
+* ✅ Gerçek zamanlı bildirim alma
+* ✅ Grup içi chat alanı
+* ✅ Takvim entegrasyonu & hatırlatıcılar
+* ✅ Görev atama ve due date belirleme
+* ✅ Offline kullanım desteği
 
-2. Start the app
+---
 
-   ```bash
-    npx expo start
-   ```
+## 📱 Kullanım Senaryoları
 
-In the output, you'll find options to open the app in a
+### 🏖️ Tatil Planı
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+* “Kim araba kiralayacak?”
+* “Kim oteli ayarlayacak?”
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 🎓 Ders Çalışma Grubu
 
-## Get a fresh project
+* “Kim hangi konuyu çalıştı?”
+* “Quiz ne zaman?”
 
-When you're ready, run:
+### 🛒 Ortak Alışveriş Listesi
+
+* “Kim markete gidecek?”
+* “Kim kahve alacak?”
+
+### 🚀 Startup Takım Panosu
+
+* Görev atamaları
+* Takip panosu
+* Notifikasyonlar
+
+---
+
+## 🛠️ Kullanılan Teknolojiler
+
+### Frontend (Mobil)
+
+* **React Native**
+* **Redux Toolkit** (Durum yönetimi)
+* **React Navigation** (Sayfa geçişleri)
+* **Expo** (Uygulama geliştirme kolaylığı)
+* **Styled Components / CSS**
+
+### Backend
+
+* **Node.js + Express.js**
+* **MongoDB** (NoSQL veritabanı)
+* **CORS** (Güvenli API bağlantısı)
+
+### Diğer Entegrasyonlar
+
+* **Firebase Cloud Messaging (FCM)** → Anlık bildirimler
+* **Socket.IO / Firebase Realtime DB** → Gerçek zamanlı veri yönetimi
+* **react-native-calendars** → Takvim görüntüleme
+* **react-native-push-notification** → Hatırlatıcı bildirimler
+* **expo-auth-session** → Google / Apple Login
+* **@react-native-async-storage/async-storage** → Offline destek
+
+---
+
+## 👥 Hedef Kitle
+
+* Gençler → Tatil planı, etkinlik koordinasyonu
+* Öğrenciler → Ders programı, çalışma grubu
+* Startup ekipleri → Task management & iş birliği
+* Aileler → Alışveriş & yapılacaklar listesi
+
+---
+
+## 🚧 Geliştirme Durumu
+
+> Uygulama halen aktif geliştirme aşamasındadır.
+> Aşağıdaki bölümler tamamlanmıştır:
+
+* ✅ Login / Register ekranları
+* ✅ Grup oluşturma ve grup listesi
+* ✅ Grup detay ekranı
+* ✅ Görev oluşturma arayüzü
+
+Yapılacaklar:
+
+* 🔄 Oylama sistemi
+* 🔄 Bildirim sistemi
+* 🔄 Chat entegrasyonu
+* 🔄 Takvim entegrasyonu
+
+---
+
+## 📌 Kurulum Talimatları
 
 ```bash
-npm run reset-project
+# Backend için:
+cd server
+npm install
+npm run dev
+
+# Frontend için:
+cd client
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 📸 Ekran Görüntüleri
 
-To learn more about developing your project with Expo, look at the following resources:
+> Geliştirme tamamlandıkça buraya ekran görüntüleri eklenecek.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## 📬 Katkıda Bulunmak İster misin?
 
-Join our community of developers creating universal apps.
+Pull request'lere ve geri bildirimlere açığız.
+İletişim: \[[email@example.com](mailto:email@example.com)]
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 🧑‍💻 Geliştirici Notu
+
+> Bu uygulama, genç ekipler ve dinamik gruplar için hızlı görev paylaşımı, eğlenceli iş bölümü ve sosyal etkileşimi kolaylaştırmayı amaçlar.
+# 🤝 GrupPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
+
+GrupPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
+Tatil planı, alışveriş listesi, ders çalışma grubu ya da bir startup görev panosu gibi birçok senaryoya uyarlanabilir.
+Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hedefler. 🇹🇷
+
+---
+
+## 🌟 Özellikler
+
+* ✅ Grup oluşturma (arkadaş, aile, ekip, vb.)
+* ✅ Görev, etkinlik, alışveriş listesi ekleme
+* ✅ Görevleri oylamaya açma: “Bunu kim yapacak?”
+* ✅ Gerçek zamanlı bildirim alma
+* ✅ Grup içi chat alanı
+* ✅ Takvim entegrasyonu & hatırlatıcılar
+* ✅ Görev atama ve due date belirleme
+
+
+---
+
+## 📱 Kullanım Senaryoları
+
+### 🏖️ Tatil Planı
+
+* “Kim araba kiralayacak?”
+* “Kim oteli ayarlayacak?”
+
+### 🎓 Ders Çalışma Grubu
+
+* “Kim hangi konuyu çalıştı?”
+* “Quiz ne zaman?”
+
+### 🛒 Ortak Alışveriş Listesi
+
+* “Kim markete gidecek?”
+* “Kim kahve alacak?”
+
+### 🚀 Startup Takım Panosu
+
+* Görev atamaları
+* Takip panosu
+* Notifikasyonlar
+
+---
+
+## 🛠️ Kullanılan Teknolojiler
+
+### Frontend (Mobil)
+
+* **React Native**
+* **Redux Toolkit** (Durum yönetimi)
+* **React Navigation** (Sayfa geçişleri)
+* **Expo** (Uygulama geliştirme kolaylığı)
+* **Styled Components / CSS**
+
+### Backend
+
+* **Node.js + Express.js**
+* **MongoDB** (NoSQL veritabanı)
+* **CORS** (Güvenli API bağlantısı)
+
+### Diğer Entegrasyonlar
+
+* **Firebase Cloud Messaging (FCM)** → Anlık bildirimler
+* **Socket.IO / Firebase Realtime DB** → Gerçek zamanlı veri yönetimi
+* **react-native-calendars** → Takvim görüntüleme
+* **react-native-push-notification** → Hatırlatıcı bildirimler
+* **expo-auth-session** → Google / Apple Login
+* **@react-native-async-storage/async-storage** → Offline destek
+
+---
+
+## 👥 Hedef Kitle
+
+* Gençler → Tatil planı, etkinlik koordinasyonu
+* Öğrenciler → Ders programı, çalışma grubu
+* Startup ekipleri → Task management & iş birliği
+* Aileler → Alışveriş & yapılacaklar listesi
+
+---
+
+## 🚧 Geliştirme Durumu
+
+> Uygulama halen aktif geliştirme aşamasındadır.
+> Aşağıdaki bölümler tamamlanmıştır:
+
+* ✅ Login / Register ekranları
+* ✅ Grup oluşturma ve grup listesi
+* ✅ Grup detay ekranı
+* ✅ Görev oluşturma arayüzü
+
+Yapılacaklar:
+
+* 🔄 Oylama sistemi
+* 🔄 Bildirim sistemi
+* 🔄 Chat entegrasyonu
+* 🔄 Takvim entegrasyonu
+
+---
+
+## 📌 Kurulum Talimatları
+
+```bash
+# Frontend için:
+cd client
+npm install
+npx expo start
+```
+
+---
+
+## 📸 Ekran Görüntüleri
+
+> Geliştirme tamamlandıkça buraya ekran görüntüleri eklenecek.
+
+---
+
+## 📬 Katkıda Bulunmak İster misin?
+
+Pull request'lere ve geri bildirimlere açığız.
+İletişim: \[[musasayar67@gmail.com](mailto:musasayar67@gmail.com)]
+
+---
+
+## 🧑‍💻 Geliştirici Notu
+
+> Bu uygulama, genç ekipler ve dinamik gruplar için hızlı görev paylaşımı, eğlenceli iş bölümü ve sosyal etkileşimi kolaylaştırmayı amaçlar.
