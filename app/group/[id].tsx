@@ -32,39 +32,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getGroupById } from "@/services/group/groupService";
 import AddMemberModal from "@/components/Modals/AddMemberModal";
+import { TasksType } from "@/types/TaskType";
 
 const GroupDetail = () => {
   const { id } = useLocalSearchParams();
   const groupId = id as string;
 
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState(null);
-  // const [groupDetail, setGroupDetail] = useState<GroupsType | null>(null);
-  //   console.log("grpoup ,id", id);
 
-  const {groupDetail} = useSelector((state: RootState) => state.group);
+  const { groupDetail } = useSelector((state: RootState) => state.group);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    // const getGroup = async () => {
-    //   try {
-    //     const response = await api.get(`/api/v1/groups/${groupId}`);
-    //     // console.log("response", JSON.stringify(response.data, null, 2));
-    //     setGroupDetail(response.data);
-    //   } catch (error) {
-    //     if (axios.isAxiosError(error)) {
-    //       console.log("error", error.response?.data.message);
-    //     } else {
-    //       console.log("error", error);
-    //     }
-    //   }
-    // };
-
     if (id) {
       // getGroup();
       dispatch(getGroupById(groupId));
     }
   }, [id]);
+
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -130,8 +115,6 @@ const GroupDetail = () => {
         </View>
 
         <TaskLists groupId={groupDetail?._id} />
-        
-      
       </ScrollView>
     </SafeAreaView>
   );
@@ -172,10 +155,11 @@ const styles = StyleSheet.create({
   },
   subDescriptionText: {
     backgroundColor: "#fff",
+    fontSize:12,
     borderRadius: 10,
     padding: 12,
     marginVertical: 10,
-    color: Colors.palette.textPrimary,
+    color: Colors.palette.textSecondary,
     fontWeight: 500,
   },
   contentField: {

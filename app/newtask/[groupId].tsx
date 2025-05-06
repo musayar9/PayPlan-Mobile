@@ -26,6 +26,7 @@ import CustomButton from "@/components/CustomButton";
 import axios from "axios";
 import { api } from "@/utils/api";
 import { setMembersList } from "@/redux/groupSlice";
+import { isLoading } from "expo-font";
 const CreateTask = () => {
   const { groupId } = useLocalSearchParams();
   const { groupDetail, membersList } = useSelector(
@@ -35,6 +36,7 @@ const CreateTask = () => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -74,6 +76,7 @@ const CreateTask = () => {
     }
 
     try {
+      setLoading(true);
       const taskData = {
         title: formData.title,
         description: formData.description,
@@ -102,6 +105,8 @@ const CreateTask = () => {
       } else {
         console.log("error", error);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -230,7 +235,7 @@ const CreateTask = () => {
         />
 
         <CustomButton
-          text="Create Task"
+          text={loading ? "Creating..." : "Create Task"}
           style={styles.createBtn}
           textColor={Colors.background}
           onPress={handleCreateTask}
