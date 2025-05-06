@@ -1,6 +1,5 @@
 # 🤝 PayPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
-
-GrupPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
+PayPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
 Tatil planı, alışveriş listesi, ders çalışma grubu ya da bir startup görev panosu gibi birçok senaryoya uyarlanabilir.
 Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hedefler. 🇹🇷
 
@@ -8,14 +7,14 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 
 ## 🌟 Özellikler
 
-* ✅ Grup oluşturma (arkadaş, aile, ekip, vb.)
-* ✅ Görev, etkinlik, alışveriş listesi ekleme
-* ✅ Görevleri oylamaya açma: “Bunu kim yapacak?”
-* ✅ Gerçek zamanlı bildirim alma
-* ✅ Grup içi chat alanı
-* ✅ Takvim entegrasyonu & hatırlatıcılar
-* ✅ Görev atama ve due date belirleme
-* ✅ Offline kullanım desteği
+- ✅ Grup oluşturma (arkadaş, aile, ekip, vb.)
+- ✅ Görev, etkinlik, alışveriş listesi ekleme
+- ✅ Görevleri oylamaya açma: “Bunu kim yapacak?”
+- ✅ Gerçek zamanlı bildirim alma
+- ✅ Grup içi chat alanı
+- ✅ Takvim entegrasyonu & hatırlatıcılar
+- ✅ Görev atama ve due date belirleme
+- ✅ Offline kullanım desteği
 
 ---
 
@@ -23,24 +22,24 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 
 ### 🏖️ Tatil Planı
 
-* “Kim araba kiralayacak?”
-* “Kim oteli ayarlayacak?”
+- “Kim araba kiralayacak?”
+- “Kim oteli ayarlayacak?”
 
 ### 🎓 Ders Çalışma Grubu
 
-* “Kim hangi konuyu çalıştı?”
-* “Quiz ne zaman?”
+- “Kim hangi konuyu çalıştı?”
+- “Quiz ne zaman?”
 
 ### 🛒 Ortak Alışveriş Listesi
 
-* “Kim markete gidecek?”
-* “Kim kahve alacak?”
+- “Kim markete gidecek?”
+- “Kim kahve alacak?”
 
 ### 🚀 Startup Takım Panosu
 
-* Görev atamaları
-* Takip panosu
-* Notifikasyonlar
+- Görev atamaları
+- Takip panosu
+- Notifikasyonlar
 
 ---
 
@@ -48,35 +47,35 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 
 ### Frontend (Mobil)
 
-* **React Native**
-* **Redux Toolkit** (Durum yönetimi)
-* **React Navigation** (Sayfa geçişleri)
-* **Expo** (Uygulama geliştirme kolaylığı)
-* **Styled Components / CSS**
+- **React Native**
+- **Redux Toolkit** (Durum yönetimi)
+- **React Navigation** (Sayfa geçişleri)
+- **Expo** (Uygulama geliştirme kolaylığı)
+- **Styled Components / CSS**
 
 ### Backend
 
-* **Node.js + Express.js**
-* **MongoDB** (NoSQL veritabanı)
-* **CORS** (Güvenli API bağlantısı)
+- **Node.js + Express.js**
+- **MongoDB** (NoSQL veritabanı)
+- **CORS** (Güvenli API bağlantısı)
 
 ### Diğer Entegrasyonlar
 
-* **Firebase Cloud Messaging (FCM)** → Anlık bildirimler
-* **Socket.IO / Firebase Realtime DB** → Gerçek zamanlı veri yönetimi
-* **react-native-calendars** → Takvim görüntüleme
-* **react-native-push-notification** → Hatırlatıcı bildirimler
-* **expo-auth-session** → Google / Apple Login
-* **@react-native-async-storage/async-storage** → Offline destek
+- **Firebase Cloud Messaging (FCM)** → Anlık bildirimler
+- **Socket.IO / Firebase Realtime DB** → Gerçek zamanlı veri yönetimi
+- **react-native-calendars** → Takvim görüntüleme
+- **react-native-push-notification** → Hatırlatıcı bildirimler
+- **expo-auth-session** → Google / Apple Login
+- **@react-native-async-storage/async-storage** → Offline destek
 
 ---
 
 ## 👥 Hedef Kitle
 
-* Gençler → Tatil planı, etkinlik koordinasyonu
-* Öğrenciler → Ders programı, çalışma grubu
-* Startup ekipleri → Task management & iş birliği
-* Aileler → Alışveriş & yapılacaklar listesi
+- Gençler → Tatil planı, etkinlik koordinasyonu
+- Öğrenciler → Ders programı, çalışma grubu
+- Startup ekipleri → Task management & iş birliği
+- Aileler → Alışveriş & yapılacaklar listesi
 
 ---
 
@@ -85,17 +84,17 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 > Uygulama halen aktif geliştirme aşamasındadır.
 > Aşağıdaki bölümler tamamlanmıştır:
 
-* ✅ Login / Register ekranları
-* ✅ Grup oluşturma ve grup listesi
-* ✅ Grup detay ekranı
-* ✅ Görev oluşturma arayüzü
+- ✅ Login / Register ekranları
+- ✅ Grup oluşturma ve grup listesi
+- ✅ Grup detay ekranı
+- ✅ Görev oluşturma arayüzü
 
 Yapılacaklar:
 
-* 🔄 Oylama sistemi
-* 🔄 Bildirim sistemi
-* 🔄 Chat entegrasyonu
-* 🔄 Takvim entegrasyonu
+- 🔄 Oylama sistemi
+- 🔄 Bildirim sistemi
+- 🔄 Chat entegrasyonu
+- 🔄 Takvim entegrasyonu
 
 ---
 
@@ -131,6 +130,7 @@ Pull request'lere ve geri bildirimlere açığız.
 ## 🧑‍💻 Geliştirici Notu
 
 > Bu uygulama, genç ekipler ve dinamik gruplar için hızlı görev paylaşımı, eğlenceli iş bölümü ve sosyal etkileşimi kolaylaştırmayı amaçlar.
+
 # 🤝 GrupPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
 
 GrupPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
@@ -141,14 +141,13 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 
 ## 🌟 Özellikler
 
-* ✅ Grup oluşturma (arkadaş, aile, ekip, vb.)
-* ✅ Görev, etkinlik, alışveriş listesi ekleme
-* ✅ Görevleri oylamaya açma: “Bunu kim yapacak?”
-* ✅ Gerçek zamanlı bildirim alma
-* ✅ Grup içi chat alanı
-* ✅ Takvim entegrasyonu & hatırlatıcılar
-* ✅ Görev atama ve due date belirleme
-
+- ✅ Grup oluşturma (arkadaş, aile, ekip, vb.)
+- ✅ Görev, etkinlik, alışveriş listesi ekleme
+- ✅ Görevleri oylamaya açma: “Bunu kim yapacak?”
+- ✅ Gerçek zamanlı bildirim alma
+- ✅ Grup içi chat alanı
+- ✅ Takvim entegrasyonu & hatırlatıcılar
+- ✅ Görev atama ve due date belirleme
 
 ---
 
@@ -156,24 +155,24 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 
 ### 🏖️ Tatil Planı
 
-* “Kim araba kiralayacak?”
-* “Kim oteli ayarlayacak?”
+- “Kim araba kiralayacak?”
+- “Kim oteli ayarlayacak?”
 
 ### 🎓 Ders Çalışma Grubu
 
-* “Kim hangi konuyu çalıştı?”
-* “Quiz ne zaman?”
+- “Kim hangi konuyu çalıştı?”
+- “Quiz ne zaman?”
 
 ### 🛒 Ortak Alışveriş Listesi
 
-* “Kim markete gidecek?”
-* “Kim kahve alacak?”
+- “Kim markete gidecek?”
+- “Kim kahve alacak?”
 
 ### 🚀 Startup Takım Panosu
 
-* Görev atamaları
-* Takip panosu
-* Notifikasyonlar
+- Görev atamaları
+- Takip panosu
+- Notifikasyonlar
 
 ---
 
@@ -181,35 +180,35 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 
 ### Frontend (Mobil)
 
-* **React Native**
-* **Redux Toolkit** (Durum yönetimi)
-* **React Navigation** (Sayfa geçişleri)
-* **Expo** (Uygulama geliştirme kolaylığı)
-* **Styled Components / CSS**
+- **React Native**
+- **Redux Toolkit** (Durum yönetimi)
+- **React Navigation** (Sayfa geçişleri)
+- **Expo** (Uygulama geliştirme kolaylığı)
+- **Styled Components / CSS**
 
 ### Backend
 
-* **Node.js + Express.js**
-* **MongoDB** (NoSQL veritabanı)
-* **CORS** (Güvenli API bağlantısı)
+- **Node.js + Express.js**
+- **MongoDB** (NoSQL veritabanı)
+- **CORS** (Güvenli API bağlantısı)
 
 ### Diğer Entegrasyonlar
 
-* **Firebase Cloud Messaging (FCM)** → Anlık bildirimler
-* **Socket.IO / Firebase Realtime DB** → Gerçek zamanlı veri yönetimi
-* **react-native-calendars** → Takvim görüntüleme
-* **react-native-push-notification** → Hatırlatıcı bildirimler
-* **expo-auth-session** → Google / Apple Login
-* **@react-native-async-storage/async-storage** → Offline destek
+- **Firebase Cloud Messaging (FCM)** → Anlık bildirimler
+- **Socket.IO / Firebase Realtime DB** → Gerçek zamanlı veri yönetimi
+- **react-native-calendars** → Takvim görüntüleme
+- **react-native-push-notification** → Hatırlatıcı bildirimler
+- **expo-auth-session** → Google / Apple Login
+- **@react-native-async-storage/async-storage** → Offline destek
 
 ---
 
 ## 👥 Hedef Kitle
 
-* Gençler → Tatil planı, etkinlik koordinasyonu
-* Öğrenciler → Ders programı, çalışma grubu
-* Startup ekipleri → Task management & iş birliği
-* Aileler → Alışveriş & yapılacaklar listesi
+- Gençler → Tatil planı, etkinlik koordinasyonu
+- Öğrenciler → Ders programı, çalışma grubu
+- Startup ekipleri → Task management & iş birliği
+- Aileler → Alışveriş & yapılacaklar listesi
 
 ---
 
@@ -218,17 +217,17 @@ Samimi, sosyal ve Türk kültürüne uygun bir kullanıcı deneyimi sunmayı hed
 > Uygulama halen aktif geliştirme aşamasındadır.
 > Aşağıdaki bölümler tamamlanmıştır:
 
-* ✅ Login / Register ekranları
-* ✅ Grup oluşturma ve grup listesi
-* ✅ Grup detay ekranı
-* ✅ Görev oluşturma arayüzü
+- ✅ Login / Register ekranları
+- ✅ Grup oluşturma ve grup listesi
+- ✅ Grup detay ekranı
+- ✅ Görev oluşturma arayüzü
 
 Yapılacaklar:
 
-* 🔄 Oylama sistemi
-* 🔄 Bildirim sistemi
-* 🔄 Chat entegrasyonu
-* 🔄 Takvim entegrasyonu
+- 🔄 Oylama sistemi
+- 🔄 Bildirim sistemi
+- 🔄 Chat entegrasyonu
+- 🔄 Takvim entegrasyonu
 
 ---
 
