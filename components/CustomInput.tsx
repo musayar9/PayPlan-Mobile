@@ -36,6 +36,7 @@ const CustomInput = ({
   labelStatus,
   ...props
 }: CustomInputProps) => {
+  console.log("lavel", labelStatus);
   return (
     <View style={{ position: "relative", width: width }}>
       <Text
@@ -77,11 +78,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 8,
     left: 5,
-
     color: "#45556c",
     zIndex: 1,
     width: "auto",
-
     paddingHorizontal: 16,
     textTransform: "capitalize",
   },

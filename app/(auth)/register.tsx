@@ -91,14 +91,14 @@ const Register = () => {
         </View>
 
         <CustomInput
-        labelStatus="auth"
+          labelStatus="auth"
           label="Email"
           placeholder="Enter your email"
           value={formData.email}
           onChangeText={(text) => setFormData({ ...formData, email: text })}
         />
         <CustomInput
-        labelStatus="auth"
+          labelStatus="auth"
           status="password"
           label="password"
           placeholder="Enter your password"
@@ -110,7 +110,7 @@ const Register = () => {
           onChangeText={(text) => setFormData({ ...formData, password: text })}
         />
         <CustomInput
-        labelStatus="auth"
+          labelStatus="auth"
           status="password"
           label="confirm password"
           placeholder="Enter confirm password"

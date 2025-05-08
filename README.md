@@ -1,7 +1,7 @@
 # 🤝 PayPlan — Sosyal Görev ve Etkinlik Takip Uygulaması
+
 PayPlan, arkadaşlarınla veya ekibinle birlikte etkinlik planlayabildiğin, görevleri bölüştüğün, oylama yapabildiğin ve anlık bildirimlerle haberdar olduğun bir mobil uygulamadır.
 Tatil planı, alışveriş listesi, ders çalışma grubu ya da bir startup görev panosu gibi birçok senaryoya uyarlanabilir.
-
 
 ---
 
@@ -14,7 +14,6 @@ Tatil planı, alışveriş listesi, ders çalışma grubu ya da bir startup gör
 - ✅ Grup içi chat alanı
 - ✅ Takvim entegrasyonu & hatırlatıcılar
 - ✅ Görev atama ve due date belirleme
-
 
 ---
 
@@ -115,16 +114,25 @@ npx expo start
 
 > Geliştirme tamamlandıkça buraya ekran görüntüleri eklenecek.
 
----
+ <!-- ![Ekran Görüntüsü 1](./assets/images//img1.png)
+ ![Ekran Görüntüsü 2](./assets/images//img2.png)
+
+![Ekran Görüntüsü 3](./assets/images//img3.png) -->
+<p align="center">
+  <img src="./assets/images/img1.png" alt="Ekran Görüntüsü 1" width="30%" style="margin-right: 10px;" />
+  <img src="./assets/images/img2.png" alt="Ekran Görüntüsü 2" width="30%" style="margin-right: 10px;" />
+  <img src="./assets/images/img3.png" alt="Ekran Görüntüsü 3" width="30%" />
+</p>
 
 ## 📬 Katkıda Bulunmak İster misin?
 
 Pull request'lere ve geri bildirimlere açığız.
 İletişim: \[[musasayar67@gmail.com](mailto:musasayar67@gmail.com)]
+
 >
+
 ---
 
 ## 🧑‍💻 Geliştirici Notu
 
 > Bu uygulama, genç ekipler ve dinamik gruplar için hızlı görev paylaşımı, eğlenceli iş bölümü ve sosyal etkileşimi kolaylaştırmayı amaçlar.
-
