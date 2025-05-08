@@ -7,10 +7,11 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  StatusBar,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
+
 import CustomBackButton from "@/components/CustomBackButton";
 import Colors from "@/constants/Colors";
 import CustomInput from "@/components/CustomInput";

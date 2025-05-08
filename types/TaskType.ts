@@ -6,6 +6,7 @@ _id:string;
 title:string;
 description:string,
 assignedTo:User;
+votes:{userId:string, vote:boolean}
 dueDate:string;
 status:string;
 isCompleted:boolean;

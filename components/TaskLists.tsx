@@ -21,6 +21,8 @@ import { RootState } from "@/redux/store";
 import axios from "axios";
 import { api } from "@/utils/api";
 import { TasksType } from "@/types/TaskType";
+import TaskListCard from "./TaskListCard";
+import TaskDetailModal from "./Modals/TaskDetailModal";
 
 interface TaskListProps {
   groupId: string;
@@ -28,13 +30,12 @@ interface TaskListProps {
 
 const TaskLists = ({ groupId }: TaskListProps) => {
   const [tasks, setTasks] = useState<TasksType[] | null>(null);
-
+  const [showTask, setShowTask] = useState(false);
   useFocusEffect(
     useCallback(() => {
       const getTask = async () => {
         try {
           const res = await api.get(`/api/v1/tasks/group/${groupId}`);
-          console.log("res", res.data);
           setTasks(res.data);
         } catch (error) {
           if (axios.isAxiosError(error)) {
@@ -95,31 +96,7 @@ const TaskLists = ({ groupId }: TaskListProps) => {
           </TouchableOpacity>
         </Link>
       </View>
-      {/* 
-      <FlatList
-        data={tasks}
-        keyExtractor={(item) => item?._id}
-       contentContainerStyle={{gap:20}}
-        nestedScrollEnabled={true}
-        renderItem={({ item }) => (
-          <View style={styles.taskWrapper}>
-            <Text style={styles.taskHeader}>{item.title}</Text>
-            <Text style={styles.taskTitle}>{item.description}</Text>
 
-            <View style={styles.taskField}>
-              <Text style={styles.taskStatus}>In Progress</Text>
-              <Image
-                style={styles.taskPersonImg}
-                source={{
-                  uri: item?.assignedTo.profilePicture
-                    ? item?.assignedTo.profilePicture
-                    : "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                }}
-              />
-            </View>
-          </View>
-        )}
-      /> */}
       {tasks?.length === 0 && (
         <View
           style={{
@@ -148,23 +125,9 @@ const TaskLists = ({ groupId }: TaskListProps) => {
         </View>
       )}
       {tasks?.map((item) => (
-        <View style={styles.taskWrapper} key={item?._id}>
-          <Text style={styles.taskHeader}>{item.title}</Text>
-          <Text style={styles.taskTitle}>{item.description}</Text>
-
-          <View style={styles.taskField}>
-            <Text style={styles.taskStatus}>In Progress</Text>
-            <Image
-              style={styles.taskPersonImg}
-              source={{
-                uri: item?.assignedTo.profilePicture
-                  ? item?.assignedTo.profilePicture
-                  : "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-              }}
-            />
-          </View>
-        </View>
+        <TaskListCard key={item?._id} item={item} setShowTask={setShowTask}/>
       ))}
+      <TaskDetailModal showTask={showTask} setShowTask={setShowTask} />
     </View>
   );
 };
@@ -189,9 +152,9 @@ const styles = StyleSheet.create({
   },
   taskWrapper: {
     backgroundColor: Colors.background,
-    padding: 12,
+    padding: 10,
     borderRadius: 12,
-    gap: 6,
+    gap: 8,
   },
   taskHeader: {
     color: Colors.palette.textSecondary,
@@ -206,12 +169,26 @@ const styles = StyleSheet.create({
   taskStatus: {
     fontWeight: "bold",
     fontSize: 10,
-    backgroundColor: Colors.red300,
-    color: Colors.red500,
+
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 8,
   },
+  pending: {
+    backgroundColor: Colors.red300,
+    color: Colors.red500,
+  },
+
+  inProgress: {
+    backgroundColor: Colors.blue400,
+    color: Colors.blue600,
+  },
+
+  completed: {
+    backgroundColor: Colors.green400,
+    color: Colors.green600,
+  },
+
   taskPersonImg: {
     width: 40,
     height: 40,

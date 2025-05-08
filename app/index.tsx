@@ -1,6 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import Colors from "@/constants/Colors";
-import { StatusBar } from "expo-status-bar";
+
 import {
   Dimensions,
   Image,
@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  StatusBar,
   View,
 } from "react-native";
 import LottieView from "lottie-react-native";

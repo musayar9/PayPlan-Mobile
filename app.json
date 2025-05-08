@@ -7,11 +7,10 @@
     "backgroundColor": "#ffffff",
     "icon": "./assets/images/icon.png",
     "androidStatusBar": {
-    "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff"
     },
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -20,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.sayarmusa.payplan"
     },
     "web": {
       "bundler": "metro",

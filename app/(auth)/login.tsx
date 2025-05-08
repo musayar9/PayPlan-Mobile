@@ -59,6 +59,7 @@ const Login = () => {
       >
         <CustomInput
         style={{textTransform:"lowercase"}}
+        labelStatus="auth"
           label="email"
           placeholder="Enter your E-mail"
           value={formData.email.trim()}
@@ -66,6 +67,7 @@ const Login = () => {
         />
         <CustomInput
           label="password"
+          labelStatus="auth"
           placeholder="Enter your Password"
           value={formData.password.trim()}
           onChangeText={(text) => setFormData({ ...formData, password: text })}

@@ -13,10 +13,10 @@ const Colors = {
   red300:"#ffa2a2",
   red500:"#fb2c36",
   red600:"#e7000b",
-  blue400:"#83c5be",
-  blue600:"#0070f3",
-  green400:"#83c5be",
-  green600:"#0070f3",
+  blue400:"#51a2ff",
+  blue600:"#155dfc",
+  green400:"#7bf1a8",
+  green600:"#00a63e",
 
   palette: {
     primary: "#3B82F6",

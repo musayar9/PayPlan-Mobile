@@ -12,6 +12,7 @@ import Colors from "@/constants/Colors";
 
 interface CustomInputProps extends TextInputProps {
   label: string;
+  labelStatus?: string;
   placeholder: string;
   value?: string;
   isPassword?: boolean;
@@ -32,11 +33,22 @@ const CustomInput = ({
   status,
   numberOfLines,
   inputHeight,
+  labelStatus,
   ...props
 }: CustomInputProps) => {
   return (
     <View style={{ position: "relative", width: width }}>
-      <Text style={styles.labelText}>{label}</Text>
+      <Text
+        style={[
+          styles.labelText,
+          {
+            backgroundColor:
+              labelStatus === "auth" ? Colors.lightBlur : Colors.background,
+          },
+        ]}
+      >
+        {label}
+      </Text>
       <TextInput
         {...props}
         value={value}
@@ -65,7 +77,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 8,
     left: 5,
-    backgroundColor: Colors.background,
+
     color: "#45556c",
     zIndex: 1,
     width: "auto",

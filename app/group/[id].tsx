@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  StatusBar,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -16,7 +17,7 @@ import { useLocalSearchParams } from "expo-router";
 import { api } from "@/utils/api";
 import axios from "axios";
 import { GroupsType } from "@/types/groupsType";
-import { StatusBar } from "expo-status-bar";
+
 import CustomBackButton from "@/components/CustomBackButton";
 import Colors from "@/constants/Colors";
 import {
@@ -38,7 +39,6 @@ const GroupDetail = () => {
   const { id } = useLocalSearchParams();
   const groupId = id as string;
 
-
   const { groupDetail } = useSelector((state: RootState) => state.group);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -48,8 +48,6 @@ const GroupDetail = () => {
       dispatch(getGroupById(groupId));
     }
   }, [id]);
-
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -155,7 +153,7 @@ const styles = StyleSheet.create({
   },
   subDescriptionText: {
     backgroundColor: "#fff",
-    fontSize:12,
+    fontSize: 12,
     borderRadius: 10,
     padding: 12,
     marginVertical: 10,

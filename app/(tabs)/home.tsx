@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  StatusBar,
   View,
 } from "react-native";
 import React, { useCallback, useEffect } from "react";
@@ -15,7 +16,7 @@ import { Video } from "expo-av";
 import { formateDate } from "@/utils/functions";
 import LottieView from "lottie-react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
+
 import Groups from "@/components/Home/Groups";
 import { useFocusEffect } from "expo-router";
 import { AppDispatch } from "@/redux/store";
@@ -34,7 +35,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={Colors.primary}  />
+      <StatusBar backgroundColor={Colors.primary} />
       <View style={styles.content}>
         <View style={[styles.headContent, styles.headLeft]}>
           <Text style={styles.headBiggerText}>PayPlan</Text>
@@ -117,8 +118,8 @@ const styles = StyleSheet.create({
   content: {
     paddingTop: width * 0.2,
     paddingBottom: width * 0.1,
-    borderBottomLeftRadius:60,
-    borderBottomRightRadius:60,
+    borderBottomLeftRadius: 60,
+    borderBottomRightRadius: 60,
     paddingHorizontal: 15,
     gap: 10,
     backgroundColor: Colors.primary,

@@ -38,6 +38,7 @@ const CreateTask = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -82,6 +83,11 @@ const CreateTask = () => {
         description: formData.description,
         dueDate: date,
         assignedTo: membersList.map((member) => member._id)[0],
+        votes: {
+          userId: membersList.map((member) => member._id)[0],
+          vote: membersList?.length > 0 ? true : false,
+        },
+
         group: groupDetail._id,
       };
 
