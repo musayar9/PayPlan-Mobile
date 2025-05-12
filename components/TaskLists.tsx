@@ -78,23 +78,54 @@ const TaskLists = ({ groupId }: TaskListProps) => {
     <View style={styles.contentField}>
       <View style={styles.taskField}>
         <Text style={styles.subHeadTextTwo}>Task Lists</Text>
-        <Link
-          asChild
-          href={{
-            pathname: "/newtask/[groupId]",
-            params: { groupId: groupId },
-          }}
-        >
-          <TouchableOpacity style={styles.taskBtn}>
-            <Ionicons
-              name={"add"}
-              size={20}
-              color={Colors.palette.accent}
-              style={{ fontWeight: "bold" }}
-            />
-            <Text>New Task</Text>
-          </TouchableOpacity>
-        </Link>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+          <Link
+            asChild
+            href={{
+              pathname: "/newtask/[groupId]",
+              params: { groupId: groupId },
+            }}
+             style={[
+              styles.taskBtn,
+              { backgroundColor: Colors.background },
+            ]}
+          >
+            <TouchableOpacity>
+              <Ionicons
+                name={"add"}
+                size={20}
+                color={Colors.palette.accent}
+                style={{ fontWeight: "bold" }}
+              />
+            </TouchableOpacity>
+          </Link>
+          <Link
+            asChild
+            href={{
+              pathname: "/groupAllTask/[groupId]",
+              params: { groupId: groupId },
+              
+            }}
+            style={[
+              styles.taskBtn,
+              { backgroundColor: Colors.gray },
+            ]}
+          >
+            <TouchableOpacity
+            // style={[
+            //   styles.taskBtn,
+            //   { backgroundColor: Colors.palette.backgroundCard, padding: 5 },
+            // ]}
+            >
+              <Ionicons
+                name={"list"}
+                size={20}
+                color={Colors.palette.accent}
+                // style={{ fontWeight: "bold" }}
+              />
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
 
       {tasks?.length === 0 && (
@@ -124,8 +155,8 @@ const TaskLists = ({ groupId }: TaskListProps) => {
           </Text>
         </View>
       )}
-      {tasks?.map((item) => (
-        <TaskListCard key={item?._id} item={item} setShowTask={setShowTask}/>
+      {tasks?.slice(0, 3).map((item) => (
+        <TaskListCard key={item?._id} item={item} setShowTask={setShowTask} />
       ))}
       <TaskDetailModal showTask={showTask} setShowTask={setShowTask} />
     </View>
@@ -146,9 +177,12 @@ const styles = StyleSheet.create({
   },
   subHeadTextTwo: { fontSize: 18, fontWeight: 600, color: Colors.textPrimary },
   taskBtn: {
-    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     gap: 6,
+    width: 35,
+    height: 35,
+    borderRadius: 8,
   },
   taskWrapper: {
     backgroundColor: Colors.background,

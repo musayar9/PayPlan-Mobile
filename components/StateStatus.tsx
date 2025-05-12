@@ -1,21 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import React from "react";
 import Colors from "@/constants/Colors";
 
-const StateStatus = ({ statusValue }: { statusValue: string }) => {
+const StateStatus = ({ statusValue, style }: { statusValue: string, style?:ViewStyle }) => {
   const stateStatus = (status) => {
     switch (status) {
       case "pending":
-        return <Text style={[styles.taskStatus, styles.pending]}>Pending</Text>;
+        return <Text style={[styles.taskStatus, styles.pending, style]}>Pending</Text>;
       case "in-progress":
         return (
-          <Text style={[styles.taskStatus, styles.inProgress]}>
+          <Text style={[styles.taskStatus, styles.inProgress, style]}>
             In Progress
           </Text>
         );
       case "completed":
         return (
-          <Text style={[styles.taskStatus, styles.completed]}>Completed</Text>
+          <Text style={[styles.taskStatus, styles.completed, style]}>Completed</Text>
         );
     }
   };

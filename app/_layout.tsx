@@ -23,6 +23,10 @@ export default function RootLayout() {
             name="newtask/[groupId]"
             options={{ headerShown: false }}
           />
+               <Stack.Screen
+            name="groupAllTask/[groupId]"
+            options={{ headerShown: false }}
+          />
 
           {/* <Stack.Screen
           name="modal"
