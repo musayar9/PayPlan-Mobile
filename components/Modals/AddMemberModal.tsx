@@ -113,7 +113,7 @@ const AddMemberModal = ({
   status,
 }: AddMemberModalProps) => {
   const [searchMember, setSearchMember] = useState("");
-  const {} = useSelector((state) => state.group);
+  const { group, groupDetail } = useSelector((state) => state.group);
   const [users, setUsers] = useState<User[]>([]);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -134,7 +134,12 @@ const AddMemberModal = ({
     };
 
     if (modalVisible) {
-      fetchUsers();
+      if (status === "create_task") {
+        console.log("groupDetail");
+        setUsers(groupDetail.members);
+      } else {
+        fetchUsers();
+      }
     }
   }, [modalVisible]);
 
@@ -165,7 +170,7 @@ const AddMemberModal = ({
                   color: Colors.textPrimary,
                 }}
               >
-                Add Members
+                {status === "create_task" ? "Assigned to Member" : "Add Member"}
               </Text>
               <Pressable
                 style={[styles.button, styles.buttonClose]}

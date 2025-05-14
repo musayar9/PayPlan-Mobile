@@ -28,7 +28,7 @@ import {
 } from "react-native-popup-menu";
 import ShowMenu from "@/components/ShowMenu";
 import { Ionicons } from "@expo/vector-icons";
-import TaskLists from "@/components/TaskLists";
+import TaskLists from "@/components/Tasks/TaskLists";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getGroupById } from "@/services/group/groupService";

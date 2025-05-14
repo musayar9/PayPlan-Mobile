@@ -5,7 +5,8 @@ import { TasksType } from "@/types/TaskType";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { setTaskId } from "@/redux/taskSlice";
-import StateStatus from "./StateStatus";
+import StateStatus from "../StateStatus";
+
 interface TaskListCardProps {
   item: TasksType;
   setShowTask: React.Dispatch<SetStateAction<boolean>>;

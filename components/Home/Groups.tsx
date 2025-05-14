@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getMyGroups } from "@/services/group/groupService";
@@ -15,11 +15,19 @@ const Groups = () => {
     (state: RootState) => state.group
   );
   const { user } = useSelector((state: RootState) => state.auth);
-  useEffect(() => {
-    if (user) {
-      dispatch(getMyGroups(user?._id));
-    }
-  }, [dispatch, user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     dispatch(getMyGroups(user?._id));
+  //   }
+  // }, [dispatch, user]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (user) {
+        dispatch(getMyGroups(user?._id));
+      }
+    }, [dispatch, user])
+  );
   console.log("error", error);
   return (
     <GroupLayout headStyle={styles.headStyle}>

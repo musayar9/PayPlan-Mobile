@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMembersList } from "@/redux/groupSlice";
 import { User } from "@/types/authType";
 import { AppDispatch, RootState } from "@/redux/store";
-import { createGroup } from "@/services/group/groupService";
+import { createGroup, getMyGroups } from "@/services/group/groupService";
 import { api } from "@/utils/api";
 import CustomHeader from "@/components/CustomHeader";
 const CreateGroup = () => {
@@ -80,17 +80,6 @@ const CreateGroup = () => {
       members: membersList.map((member) => member._id),
       createdBy: user?._id, // Replace with actual user ID
     };
-    // console.log("grouppDa", JSON.stringify(groupData, null, 2));
-    // await dispatch(createGroup(groupData));
-    // if (group) {
-    //   setFormData({
-    //     name: "",
-    //     description: "",
-    //     groupPicture: "",
-    //   });
-    //   await dispatch(setMembersList([]));
-    //   router.push("/home");
-    // }
 
     try {
       setIsLoading(true);
@@ -102,6 +91,7 @@ const CreateGroup = () => {
           groupPicture: "",
         });
         setGroup(response.data.group);
+        // await dispatch(getMyGroups(user?._id));
         await dispatch(setMembersList([]));
         router.push("/home");
       }

@@ -38,7 +38,6 @@ const CreateTask = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
-
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -75,6 +74,8 @@ const CreateTask = () => {
     ) {
       console.log("Please fill all the fields");
     }
+    
+    
 
     try {
       setLoading(true);
@@ -84,7 +85,7 @@ const CreateTask = () => {
         dueDate: date,
         assignedTo: membersList.map((member) => member._id)[0],
         votes: {
-          userId: membersList.map((member) => member._id)[0],
+          userId: membersList?.map((member) => member._id)[0],
           vote: membersList?.length > 0 ? true : false,
         },
 
