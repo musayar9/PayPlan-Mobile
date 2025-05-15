@@ -29,6 +29,14 @@ const Groups = () => {
     }, [dispatch, user])
   );
   console.log("error", error);
+
+  if (isLoading) {
+    return (
+      <View>
+        <Text>Loading....</Text>
+      </View>
+    );
+  }
   return (
     <GroupLayout headStyle={styles.headStyle}>
       <FlatList

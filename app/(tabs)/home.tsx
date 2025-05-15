@@ -33,6 +33,8 @@ const Home = () => {
     AsyncStorage.removeItem("token");
   };
 
+
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.primary} />

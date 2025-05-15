@@ -39,7 +39,9 @@ const GroupDetail = () => {
   const { id } = useLocalSearchParams();
   const groupId = id as string;
 
-  const { groupDetail } = useSelector((state: RootState) => state.group);
+  const { groupDetail, isLoading } = useSelector(
+    (state: RootState) => state.group
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -49,13 +51,21 @@ const GroupDetail = () => {
     }
   }, [id]);
 
+  if (isLoading) {
+    return (
+      <View>
+        <Text>İs loading</Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
       <View style={styles.contentHeader}>
         <CustomBackButton />
         <Text style={styles.headText}>Details</Text>
-        <ShowMenu />
+        <ShowMenu groupId={groupId} />
       </View>
 
       <ScrollView
