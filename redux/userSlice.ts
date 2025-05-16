@@ -22,7 +22,12 @@ const initialState = {
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    signOut: (state) => {
+      (state.user = null), (state.token = null);
+      (state.error = null), (state.message = null);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
@@ -52,8 +57,8 @@ const userSlice = createSlice({
         error = null;
         message = null;
       })
-      
-      .addCase(login.fulfilled, (state, action)=>{
+
+      .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         // console.log("action", action)
         const { user, token, message } = action.payload;
@@ -62,13 +67,14 @@ const userSlice = createSlice({
         state.message = message;
         // AsyncStorage.setItem("token", JSON.stringify(token));
       })
-      
-      .addCase(login.rejected, (state, action)=>{
+
+      .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
-        state.message = action.error.message
-      })
+        state.message = action.error.message;
+      });
   },
 });
 
+export const { signOut } = userSlice.actions;
 export default userSlice.reducer;

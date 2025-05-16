@@ -38,6 +38,7 @@ const groupSlice = createSlice({
     searchFilterGroup: (state, action) => {
       state.group = action.payload;
     },
+
   },
   extraReducers: (builder) => {
     builder

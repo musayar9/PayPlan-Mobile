@@ -1,6 +1,13 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
+import CustomBar from "@/components/CustomBar";
 
 const Tasks = () => {
   const [assignedMe, setAssignedMe] = useState(true);
@@ -68,6 +75,24 @@ const Tasks = () => {
           <Text>Group Tasklar</Text>
         </View>
       )}
+      <View style={{marginHorizontal:10}}>
+        <ScrollView
+          style={{ width: "100%" }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.statusBarContent}
+        >
+          {[
+            "All",
+            "Pending",
+            "In-Completed",
+            "Completed",
+     
+          ].map((title, index) => (
+            <CustomBar key={index} title={title} />
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -81,8 +106,8 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   headWrapper: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.palette.backgroundCard,
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.textLight_50,
     width: "100%",
     // paddingTop: -10,
     top: -4,
@@ -107,5 +132,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     zIndex: 100,
     top: 8,
+  },
+
+  statusBarContent: {
+    flexDirection: "row",
+
+    // height: 40,
+    gap: 8,
+    paddingHorizontal:8,
+    paddingVertical: 8,
   },
 });
