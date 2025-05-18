@@ -4,13 +4,68 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
 import CustomBar from "@/components/CustomBar";
+import { TasksType } from "@/types/TaskType";
+import { useFocusEffect } from "expo-router";
+import { api } from "@/utils/api";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import TaskCard from "@/components/Tasks/TaskCard";
+
+const getAssignedTask = async ({ userId }: { userId: String }) => {
+  try {
+    const res = await api.get(`/api/v1/tasks/assignedTo/${userId}`);
+    return { data: res.data };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data.message);
+    } else {
+      console.log("errror", error);
+    }
+  }
+};
 
 const Tasks = () => {
   const [assignedMe, setAssignedMe] = useState(true);
+  const [myTask, setMyTask] = useState<TasksType[] | null>(null);
+  const [filterData, setFilterData] = useState<TasksType[] | null>(null);
+  const { user } = useSelector((state: RootState) => state.auth);
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        const { data } = await getAssignedTask({ userId: user?._id });
+        console.log("data");
+        setMyTask(data);
+        setFilterData(data);
+      };
+      if (user) {
+        getData();
+      }
+    }, [user])
+  );
+
+  const status = ["all", ...new Set(myTask?.map((item) => item.status))];
+
+  const handleFilterCategory = async (category: title) => {
+    console.log("title", category);
+    if (category === "all") {
+      setFilterData(myTask);
+    } else {
+      const filterResult = myTask.filter((item) => item?.status === category);
+      setFilterData(filterResult);
+    }
+  };
+
+  // console.log("FİLTERrE", status);
+  // console.log(
+  //   "FİLTERrESULT",
+  //   filterData?.map((item) => item.title)
+  // );
 
   return (
     <View style={styles.container}>
@@ -68,30 +123,41 @@ const Tasks = () => {
 
       {assignedMe ? (
         <View>
-          <Text>bANA ATANAN TASKLAR</Text>
+          <Text>Tasks assigned to me</Text>
         </View>
       ) : (
         <View>
-          <Text>Group Tasklar</Text>
+          <Text>Group Task</Text>
         </View>
       )}
-      <View style={{marginHorizontal:10}}>
+      <View style={{ marginHorizontal: 10 }}>
         <ScrollView
           style={{ width: "100%" }}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.statusBarContent}
         >
-          {[
-            "All",
-            "Pending",
-            "In-Completed",
-            "Completed",
-     
-          ].map((title, index) => (
-            <CustomBar key={index} title={title} />
-          ))}
+          {["all", "pending", "in-Completed", "completed"].map(
+            (title, index) => (
+              <CustomBar
+                key={index}
+                title={title}
+                onPress={() => handleFilterCategory(title)}
+              />
+            )
+          )}
         </ScrollView>
+      </View>
+
+      <View>
+        <FlatList
+          data={filterData}
+          keyExtractor={(item) => item._id}
+          renderItem={(task) => <TaskCard item={task.item} />}
+          ListEmptyComponent={<View>
+          <Text>Task Bulunnamdı</Text>
+          </View>}
+        />
       </View>
     </View>
   );
@@ -139,7 +205,7 @@ const styles = StyleSheet.create({
 
     // height: 40,
     gap: 8,
-    paddingHorizontal:8,
+    paddingHorizontal: 8,
     paddingVertical: 8,
   },
 });
