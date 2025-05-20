@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TasksType } from "@/types/TaskType";
 import Colors from "@/constants/Colors";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { formatDates } from "@/utils/functions";
 import StateStatus from "../StateStatus";
+import TaskProgress from "./TaskProgress";
 
 interface TaskCardProps {
   item: TasksType;
@@ -19,23 +20,7 @@ const TaskCard = ({ item }: TaskCardProps) => {
 
         <View style={styles.taskContentHead}>
           <View style={styles.createTaskInfo}>
-            <Ionicons
-              name="calendar-sharp"
-              size={24}
-              color={Colors.palette.accent}
-            />
-            <View>
-              <Text style={styles.cTaskLabel}>Created Task</Text>
-              <Text style={styles.createDate}>
-                {formatDates(item?.createdAt)}
-              </Text>
-            </View>
-          </View>
-
-          {/* <StateStatus statusValue={item.status} /> */}
-
-          <View style={styles.createTaskInfo}>
-            <View>
+            {/* <View>
               <Text style={styles.cTaskLabel}>Due Date</Text>
               <Text style={styles.createDate}>
                 {formatDates(item?.dueDate)}
@@ -45,8 +30,30 @@ const TaskCard = ({ item }: TaskCardProps) => {
               name="calendar-clock"
               size={28}
               color={Colors.primary}
+            /> */}
+            <Image
+              source={{
+                uri: item.group.groupPicture
+                  ? `data:image/png;base64,${item.group.groupPicture}`
+                  : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
+              }}
+              style={styles.groupImage}
             />
+            <View>
+              <Text style={styles.cTaskLabel}>{item.group.name}</Text>
+              <View style={styles.createTaskInfo}>
+                <Ionicons name="time" size={18} color={Colors.textLight} />
+                <View>
+                  <Text style={styles.createDate}>
+                    {formatDates(item?.createdAt)}
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
+
+          {/* <StateStatus statusValue={item.status} /> */}
+          <TaskProgress />
         </View>
 
         <View
@@ -94,6 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 12,
+    gap: 12,
   },
 
   taskContentHead: {
@@ -108,16 +116,29 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   cTaskLabel: {
-    fontSize: 10,
-    color: Colors.palette.textSecondary,
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.palette.textPrimary,
   },
   createDate: {
     fontSize: 12,
     fontWeight: "600",
+    color: Colors.textLight,
   },
   bullet: {
     marginRight: 6,
 
     lineHeight: 18,
+  },
+  memberImage: {
+    width: 44,
+    height: 44,
+    // borderWidth: 1,
+    borderRadius: 50,
+  },
+  groupImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 50,
   },
 });
