@@ -69,7 +69,10 @@ const TaskListCard = ({ item, setShowTask }: TaskListCardProps) => {
 
       <View style={styles.taskField}>
         {/* {stateStatus(item.status)} */}
-        <StateStatus statusValue={item.status}/>
+        <StateStatus
+          statusValue={item.status}
+          style={{ color: Colors.background }}
+        />
 
         {item?.votes.vote && (
           <Image

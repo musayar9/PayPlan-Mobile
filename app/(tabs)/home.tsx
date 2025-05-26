@@ -18,7 +18,7 @@ import LottieView from "lottie-react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import Groups from "@/components/Home/Groups";
-import { useFocusEffect } from "expo-router";
+import { Link, useFocusEffect, useRouter } from "expo-router";
 import { AppDispatch } from "@/redux/store";
 import { getMyGroups } from "@/services/group/groupService";
 const { width, height } = Dimensions.get("screen");
@@ -33,7 +33,7 @@ const Home = () => {
     AsyncStorage.removeItem("token");
   };
 
-
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -90,7 +90,8 @@ const Home = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity
+          <Link
+            href="/group/data-select"
             style={[
               styles.profileButton,
               { borderColor: user ? Colors.background : Colors.textSecondary },
@@ -100,7 +101,7 @@ const Home = () => {
               source={require("@/assets/images/itachi.jpeg")}
               style={styles.profilePicture}
             />
-          </TouchableOpacity>
+          </Link>
         </View>
       </View>
 

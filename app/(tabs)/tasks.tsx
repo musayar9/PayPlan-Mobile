@@ -4,20 +4,25 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Animated,
   FlatList,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Colors from "@/constants/Colors";
 import CustomBar from "@/components/CustomBar";
 import { TasksType } from "@/types/TaskType";
 import { useFocusEffect } from "expo-router";
 import { api } from "@/utils/api";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import TaskCard from "@/components/Tasks/TaskCard";
+import { setFilterData, setMyTask } from "@/redux/taskSlice";
+import TaskCalendar from "@/components/Tasks/TaskCalendar";
+import TaskTimeLine from "@/components/Tasks/TaskTimeLine";
+import AgendaCalendar from "@/components/Tasks/AgendaCalendar";
 
-const getAssignedTask = async ({ userId }: { userId: String }) => {
+export const getAssignedTask = async ({ userId }: { userId: String }) => {
   try {
     const res = await api.get(`/api/v1/tasks/assignedTo/${userId}`);
     return { data: res.data };
@@ -32,104 +37,118 @@ const getAssignedTask = async ({ userId }: { userId: String }) => {
 
 const Tasks = () => {
   const [assignedMe, setAssignedMe] = useState(true);
-  const [myTask, setMyTask] = useState<TasksType[] | null>(null);
-  const [filterData, setFilterData] = useState<TasksType[] | null>(null);
+  // const [myTask, setMyTask] = useState<TasksType[] | null>(null);
+  // const [filterData, setFilterData] = useState<TasksType[] | null>(null);
   const { user } = useSelector((state: RootState) => state.auth);
+  const { updateTask, taskUpdateLoading, myTask, filterData } = useSelector(
+    (state: RootState) => state.task
+  );
+  const [active, setActive] = useState("all");
+  const translateX = useRef(new Animated.Value(0)).current;
+
+  const dispatch = useDispatch<AppDispatch>();
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
         const { data } = await getAssignedTask({ userId: user?._id });
         console.log("data");
-        setMyTask(data);
-        setFilterData(data);
+        dispatch(setMyTask(data));
+        dispatch(setFilterData(data));
       };
       if (user) {
         getData();
       }
-    }, [user])
+    }, [user, updateTask])
   );
+  const handleTabPress = (assigned: boolean) => {
+    setAssignedMe(assigned);
+    Animated.timing(translateX, {
+      toValue: assigned ? 0 : 225, // mesafeyi sekme genişliğine göre ayarla
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const status = ["all", ...new Set(myTask?.map((item) => item.status))];
 
-  const handleFilterCategory = async (category: title) => {
-    console.log("title", category);
+  const handleFilterCategory = async (category: string) => {
     if (category === "all") {
-      setFilterData(myTask);
+      setActive("all");
+      // setFilterData(myTask);
+      dispatch(setFilterData(myTask));
     } else {
       const filterResult = myTask.filter((item) => item?.status === category);
-      setFilterData(filterResult);
+      // setFilterData(filterResult);
+      dispatch(setFilterData(filterResult));
+      setActive(category);
     }
   };
-
-  // console.log("FİLTERrE", status);
-  // console.log(
-  //   "FİLTERrESULT",
-  //   filterData?.map((item) => item.title)
-  // );
+  const sampleTasks = [
+    { date: "2024-05-26", title: "React Native eğitimi" },
+    { date: "2024-05-27", title: "API bağlantısı yapılacak" },
+    { date: "2024-05-27", title: "Tasarım revizyonu" },
+    { date: "2024-05-28", title: "Sunum hazırlanacak" },
+  ];
 
   return (
     <View style={styles.container}>
       <View style={styles.headContent}>
-        <TouchableOpacity onPress={() => setAssignedMe(true)}>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+
+            alignItems: "center",
+            paddingVertical: 10,
+            borderRadius: 10,
+          }}
+          onPress={() => handleTabPress(true)}
+        >
           <Text
-            style={[
-              styles.btnText,
-              {
-                color: assignedMe
-                  ? Colors.palette.accent
-                  : Colors.palette.textSecondary,
-              },
-            ]}
+            style={{
+              color: assignedMe
+                ? Colors.palette.accent
+                : Colors.palette.textSecondary,
+              fontWeight: "bold",
+            }}
           >
             Bana Atananlar
           </Text>
-          <View
-            style={[
-              styles.bar,
-              {
-                borderBottomColor: assignedMe
-                  ? Colors.palette.accent
-                  : "transparent",
-              },
-            ]}
-          />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setAssignedMe(false)}>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+
+            alignItems: "center",
+            paddingVertical: 10,
+            borderRadius: 10,
+          }}
+          onPress={() => handleTabPress(false)}
+        >
           <Text
-            style={[
-              styles.btnText,
-              {
-                color: assignedMe
-                  ? Colors.palette.textSecondary
-                  : Colors.palette.accent,
-              },
-            ]}
+            style={{
+              color: !assignedMe
+                ? Colors.palette.accent
+                : Colors.palette.textSecondary,
+              fontWeight: "bold",
+            }}
           >
             Group Taskları
           </Text>
-          <View
-            style={[
-              styles.bar,
-              {
-                borderBottomColor: !assignedMe
-                  ? Colors.palette.accent
-                  : "transparent",
-              },
-            ]}
-          />
         </TouchableOpacity>
+        <Animated.View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "50%",
+            height: 3,
+            backgroundColor: Colors.palette.accent,
+            transform: [{ translateX }],
+          }}
+        />
       </View>
       <View style={styles.headWrapper} />
 
-      {assignedMe ? (
-        <View>
-          <Text>Tasks assigned to me</Text>
-        </View>
-      ) : (
-        <View>
-          <Text>Group Task</Text>
-        </View>
-      )}
       <View style={{ marginHorizontal: 10 }}>
         <ScrollView
           style={{ width: "100%" }}
@@ -137,28 +156,36 @@ const Tasks = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.statusBarContent}
         >
-          {["all", "pending", "in-Completed", "completed"].map(
+          {["all", "pending", "in-progress", "completed"].map(
             (title, index) => (
               <CustomBar
                 key={index}
                 title={title}
                 onPress={() => handleFilterCategory(title)}
+                active={active}
               />
             )
           )}
         </ScrollView>
       </View>
 
-      <View>
+      {/* <View>
         <FlatList
           data={filterData}
           keyExtractor={(item) => item._id}
+          contentContainerStyle={{ paddingVertical: 20 }}
+          style={{ height: "80%" }}
           renderItem={(task) => <TaskCard item={task.item} />}
-          ListEmptyComponent={<View>
-          <Text>Task Bulunnamdı</Text>
-          </View>}
+          ListEmptyComponent={
+            <View>
+              <Text>Task Bulunnamdı</Text>
+            </View>
+          }
         />
-      </View>
+      </View> */}
+
+      {/* <TaskTimeLine /> */}
+      <AgendaCalendar tasks={sampleTasks} />
     </View>
   );
 };

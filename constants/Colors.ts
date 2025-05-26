@@ -28,6 +28,7 @@ const Colors = {
     success: "#10B981",
     warning: "#F59E0B",
     accent: "#8B5CF6",
+    accentLight: "#DDD6FE",
     backgroundLight: "#F3F4F6",
     backgroundCard: "#FFFFFF",
     textPrimary: "#111827",

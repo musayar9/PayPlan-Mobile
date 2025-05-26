@@ -192,16 +192,14 @@ const TaskDetailModal = ({ showTask, setShowTask }: TaskDetailModalProps) => {
             <View style={styles.borderLine}></View>
             <View style={{ paddingVertical: 12 }}>
               {user?._id === taskDetail?.group.createdBy ? (
-              
-              
                 <StateStatus
                   statusValue={taskDetail?.status}
                   style={styles.stateStatusText}
                 />
+              ) : (
                 // <Text style={[styles.cardText, {fontSize:14, textAlign:"center"}]}>
                 //   You cannot participate in voting for your own task.
                 // </Text>
-              ) : (
                 <View>
                   {taskDetail?.votes?.vote ? (
                     <StateStatus
@@ -309,7 +307,7 @@ const styles = StyleSheet.create({
   },
   stateStatusText: {
     fontSize: 18,
-    // color:Colors?.background,
+    color: Colors?.background,
     textAlign: "center",
     borderRadius: 30,
   },

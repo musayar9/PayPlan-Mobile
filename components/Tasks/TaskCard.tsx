@@ -1,36 +1,40 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useState } from "react";
 import { TasksType } from "@/types/TaskType";
 import Colors from "@/constants/Colors";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { formatDates } from "@/utils/functions";
 import StateStatus from "../StateStatus";
 import TaskProgress from "./TaskProgress";
+import StatusModal from "./StatusModal";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface TaskCardProps {
   item: TasksType;
 }
 
 const TaskCard = ({ item }: TaskCardProps) => {
-  // console.log("itemr", item.title)
+  const { updateTask, taskUpdateLoading, filterData } = useSelector(
+    (state: RootState) => state.task
+  );
+  const [showModal, setShowModal] = useState(false);
+  const [taskValues, setTaskValues] = useState({
+    taskId: "",
+    taskStatus: "",
+  });
   return (
     <View style={styles.container}>
       <View style={styles.taskContent}>
-        {/* Crete Task Date*/}
-
         <View style={styles.taskContentHead}>
           <View style={styles.createTaskInfo}>
-            {/* <View>
-              <Text style={styles.cTaskLabel}>Due Date</Text>
-              <Text style={styles.createDate}>
-                {formatDates(item?.dueDate)}
-              </Text>
-            </View>
-            <MaterialCommunityIcons
-              name="calendar-clock"
-              size={28}
-              color={Colors.primary}
-            /> */}
             <Image
               source={{
                 uri: item.group.groupPicture
@@ -52,35 +56,82 @@ const TaskCard = ({ item }: TaskCardProps) => {
             </View>
           </View>
 
-          {/* <StateStatus statusValue={item.status} /> */}
-          <TaskProgress />
+          <TaskProgress statusValue={item.status} />
         </View>
 
         <View
           style={{
-            // flexDirection: "row",
-            // alignItems: "center",
             paddingVertical: 12,
             gap: 4,
           }}
         >
-          <Text style={{ fontSize: 10, color: Colors.palette.textPrimary }}>
-            Task Content:{" "}
-          </Text>
-          <Text style={styles.appointInfo}>{item?.title}</Text>
+          <Text style={styles.taskTitle}>{item?.title}</Text>
 
           <View style={{ flexDirection: "row", gap: 4 }}>
             <Ionicons
-              name="radio-button-on-outline"
+              name="radio-button-on"
               color={Colors.textSecondary}
               size={12}
               style={styles.bullet}
             />
-            <Text style={{ fontSize: 12, color: Colors.palette.textSecondary }}>
+            <Text style={{ fontSize: 12, color: Colors.palette.textPrimary }}>
               {item?.description}
             </Text>
           </View>
         </View>
+        <View style={styles.headWrapper} />
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginVertical: 8,
+          }}
+        >
+          <TouchableOpacity
+            disabled={item.status === "completed"}
+            onPress={() => {
+              setShowModal(true);
+              setTaskValues({ taskId: item?._id, taskStatus: item.status });
+            }}
+            style={[
+              styles.editBtn,
+
+              item.status.toLowerCase() === "completed"
+                ? styles.isCompleted
+                : styles.isNotCompleted,
+            ]}
+          >
+            <Ionicons name="pencil" color={Colors.background} size={16} />
+            <Text
+              style={{
+                fontWeight: "600",
+                fontSize: 12,
+                color: Colors.background,
+              }}
+            >
+              {item.status === "completed" ? "Edited" : "Edit"}
+            </Text>
+          </TouchableOpacity>
+
+          {taskUpdateLoading && item._id === taskValues.taskId ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : (
+            <StateStatus
+              statusValue={item.status}
+              style={{ color: Colors.background }}
+            />
+          )}
+        </View>
+        <View />
+      </View>
+      <View>
+        <StatusModal
+          modalVisible={showModal}
+          setShowModal={setShowModal}
+          taskValues={taskValues}
+        />
       </View>
     </View>
   );
@@ -101,7 +152,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    gap: 12,
+    gap: 4,
   },
 
   taskContentHead: {
@@ -131,14 +182,59 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   memberImage: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     // borderWidth: 1,
-    borderRadius: 50,
+    borderRadius: 10,
   },
   groupImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 50,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+  },
+  taskTitle: {
+    fontWeight: 600,
+  },
+
+  headWrapper: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.textLight_50,
+    width: "100%",
+    // paddingTop: -10,
+    top: -4,
+  },
+
+  taskPersonImg: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 2.5,
+    backgroundColor: "#fff",
+    elevation: 3,
+  },
+  editBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    // backgroundColor: Colors.lightBlur,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+
+  isNotCompleted: {
+    backgroundColor: Colors.palette.accent,
+    borderWidth: 1,
+    borderColor: Colors.palette.border,
+  },
+  isCompleted: {
+    backgroundColor: Colors.palette.accentLight,
   },
 });
