@@ -79,3 +79,11 @@ console.log(getFormatDate("2025-11-02")); // 2 Kasım
 };
 
 console.log(getFullDate("2025-05-26")); // Pazartesi, 26 Mayıs
+
+
+export const getTime = (dateString:string)=>{
+  const date = new Date(dateString);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}

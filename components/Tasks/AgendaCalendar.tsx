@@ -1,4 +1,7 @@
+import { getAssignedTask } from "@/app/(tabs)/tasks";
 import Colors from "@/constants/Colors";
+import { AppDispatch, RootState } from "@/redux/store";
+import { setFilterData, setMyTask, setSelectedDate } from "@/redux/taskSlice";
 import { getFullDate } from "@/utils/functions";
 import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect, useRef } from "react";
@@ -9,22 +12,26 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Task {
-  date: string; 
+  date: string;
   title: string;
 }
 
 interface Props {
   tasks: Task[];
-  initialDate?: string; 
+  initialDate?: string;
 }
 
 const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
   const flatListRef = useRef<FlatList>(null);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { selectedDate } = useSelector((state: RootState) => state.task);
+  const dispatch = useDispatch<AppDispatch>();
+  // const [selectedDate, setSelectedDate] = useState(
+  //   new Date().toISOString().split("T")[0]
+  // );
   const [days, setDays] = useState<string[]>([]);
 
   useEffect(() => {
@@ -52,6 +59,18 @@ const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
   }
 
   const { day, month, dayName } = getFullDate(selectedDate);
+
+  const handleDateChange = async (dateString: string) => {
+    dispatch(setSelectedDate(dateString));
+    const { data } = await getAssignedTask({
+      userId: user?._id,
+      sortDate: dateString,
+    });
+    dispatch(setMyTask(data));
+    if (data) {
+      dispatch(setFilterData(data));
+    }
+  };
   return (
     <View style={styles.container}>
       {/* Tarihler */}
@@ -64,7 +83,7 @@ const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
           paddingVertical: 10,
         }}
       >
-        <Text style={{fontSize:22, fontWeight:"600"}}> {month} </Text>
+        <Text style={{ fontSize: 22, fontWeight: "600" }}> {month} </Text>
         <Feather
           name="calendar"
           size={20}
@@ -93,7 +112,7 @@ const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
           const { dayName, day, month } = getFullDate(item);
           return (
             <TouchableOpacity
-              onPress={() => setSelectedDate(item)}
+              onPress={() => handleDateChange(item)}
               // style={[
               //   styles.dateButton,
               //   selectedDate === item && styles.selectedDateButton,
@@ -104,7 +123,10 @@ const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
                 justifyContent: "center",
               }}
             >
-              <Text style={{fontSize:16, fontWeight:600}}> {dayName.charAt(0)}</Text>
+              <Text style={{ fontSize: 16, fontWeight: 600 }}>
+                {" "}
+                {dayName.charAt(0)}
+              </Text>
               <View
                 style={[
                   styles.dateButton,
@@ -115,7 +137,9 @@ const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
                   name="dot-single"
                   size={24}
                   color={
-                    selectedDate === item ? Colors.palette.accent : Colors.textLight_50
+                    selectedDate === item
+                      ? Colors.palette.accent
+                      : Colors.textLight_50
                   }
                 />
 
@@ -132,21 +156,6 @@ const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
           );
         }}
       />
-
-      {/* Görevler */}
-      <View style={styles.taskList}>
-        {tasks.filter((t) => t.date === selectedDate).length === 0 ? (
-          <Text style={styles.noTaskText}>Bu tarihte görev yok</Text>
-        ) : (
-          tasks
-            .filter((t) => t.date === selectedDate)
-            .map((task, index) => (
-              <View key={index} style={styles.taskItem}>
-                <Text>{task.title}</Text>
-              </View>
-            ))
-        )}
-      </View>
     </View>
   );
 };

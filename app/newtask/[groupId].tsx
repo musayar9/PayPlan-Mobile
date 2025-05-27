@@ -20,7 +20,7 @@ import CustomHeader from "@/components/CustomHeader";
 import CustomInput from "@/components/CustomInput";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { formateDate, formatDates } from "@/utils/functions";
+import { formateDate, formatDates, getTime } from "@/utils/functions";
 import AddMemberModal from "@/components/Modals/AddMemberModal";
 import CustomButton from "@/components/CustomButton";
 import axios from "axios";
@@ -34,8 +34,10 @@ const CreateTask = () => {
   );
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -55,9 +57,29 @@ const CreateTask = () => {
     setMode(currentMode);
   };
 
+  const handleTimeChange = (event: any, selectedTime?: Date) => {
+    setShowTimePicker(false);
+    if (selectedTime) setTime(selectedTime);
+  };
+
   const showDatepicker = () => {
     showMode("date");
   };
+
+  const getCombineDateTime = () => {
+    if (!date || !time) return null;
+
+    const combined = new Date(date);
+    combined.setHours(time.getHours());
+    combined.setMinutes(time.getMinutes());
+    combined.setSeconds(0);
+    combined.setMilliseconds(0);
+    console.log("combined", combined);
+    const formattedLocal = combined.toLocaleString("sv-SE").replace(" ", "T");
+    console.log( "formattedLocal", formattedLocal);
+    return formattedLocal;
+  };
+  getCombineDateTime();
 
   useEffect(() => {
     if (groupId !== groupDetail?.id) {
@@ -74,15 +96,13 @@ const CreateTask = () => {
     ) {
       console.log("Please fill all the fields");
     }
-    
-    
 
     try {
       setLoading(true);
       const taskData = {
         title: formData.title,
         description: formData.description,
-        dueDate: date,
+        dueDate: getCombineDateTime(),
         assignedTo: membersList.map((member) => member._id)[0],
         votes: {
           userId: membersList?.map((member) => member._id)[0],
@@ -116,7 +136,7 @@ const CreateTask = () => {
       setLoading(false);
     }
   };
-
+  console.log("time", getTime(time));
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -174,35 +194,65 @@ const CreateTask = () => {
 
         <View
           style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+
             marginTop: 20,
+            gap: 10,
           }}
         >
-          <TouchableOpacity
-            onPress={showDatepicker}
-            onPress={showDatepicker}
-            style={styles.dueDateBtn}
-          >
-            <Text style={styles.memberText}>Due Date</Text>
-            <View style={[styles.addMemberBtn]}>
-              <Ionicons
-                name="calendar-outline"
-                size={16}
-                color={Colors.background}
-              />
-            </View>
-          </TouchableOpacity>
-          <Text style={styles.dueBtnText}>{formatDates(date)}</Text>
-        </View>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              onPress={showDatepicker}
+              style={styles.dueDateBtn}
+            >
+              <Text style={styles.memberText}>Due Date</Text>
+              <View style={[styles.addMemberBtn]}>
+                <Ionicons
+                  name="calendar-outline"
+                  size={16}
+                  color={Colors.background}
+                />
+              </View>
+            </TouchableOpacity>
+            <Text style={styles.dueBtnText}>{formatDates(date)}</Text>
+          </View>
 
-        {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={mode}
-            is24Hour={true}
-            onChange={onChange}
-          />
-        )}
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={true}
+              onChange={onChange}
+            />
+          )}
+
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              onPress={() => setShowTimePicker(true)}
+              style={styles.dueDateBtn}
+            >
+              <Text style={styles.memberText}>Due Time</Text>
+              <View style={[styles.addMemberBtn]}>
+                <Ionicons
+                  name="time"
+                  size={16}
+                  color={Colors.background}
+                />
+              </View>
+            </TouchableOpacity>
+            <Text style={styles.dueBtnText}>{getTime(time)}</Text>
+          </View>
+          {showTimePicker && (
+            <DateTimePicker
+              value={time ?? new Date()}
+              mode="time"
+              display="default"
+              onChange={handleTimeChange}
+            />
+          )}
+        </View>
 
         <View style={styles.addMember}>
           <Text style={styles.memberText}>Assigned to user</Text>

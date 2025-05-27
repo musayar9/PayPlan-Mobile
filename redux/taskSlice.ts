@@ -1,12 +1,14 @@
 import { TasksType } from "@/types/TaskType";
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react";
 
 interface TaskState {
   taskId: String;
   updateTask: Boolean;
   taskUpdateLoading: Boolean;
-  myTask: TasksType[] | null;
+  myTask: [] ;
   filterData: TasksType[] | null;
+  selectedDate?: string;
 }
 
 const initialState: TaskState = {
@@ -15,6 +17,7 @@ const initialState: TaskState = {
   taskUpdateLoading: false,
   filterData: null,
   myTask: null,
+  selectedDate: new Date().toISOString().split("T")[0],
 };
 
 const taskSlice = createSlice({
@@ -36,6 +39,9 @@ const taskSlice = createSlice({
     setFilterData: (state, action) => {
       state.filterData = action.payload;
     },
+    setSelectedDate: (state, action) => {
+      state.selectedDate = action.payload;
+    },
   },
 });
 
@@ -45,5 +51,6 @@ export const {
   setUpdateTaskLoading,
   setMyTask,
   setFilterData,
+  setSelectedDate
 } = taskSlice.actions;
 export default taskSlice.reducer;

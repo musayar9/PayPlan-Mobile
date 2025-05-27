@@ -22,9 +22,9 @@ import TaskCalendar from "@/components/Tasks/TaskCalendar";
 import TaskTimeLine from "@/components/Tasks/TaskTimeLine";
 import AgendaCalendar from "@/components/Tasks/AgendaCalendar";
 
-export const getAssignedTask = async ({ userId }: { userId: String }) => {
+export const getAssignedTask = async ({ userId, sortDate }: { userId: String, sortDate:string }) => {
   try {
-    const res = await api.get(`/api/v1/tasks/assignedTo/${userId}`);
+    const res = await api.get(`/api/v1/tasks/assignedTo/${userId}?sortDate=${sortDate}`);
     return { data: res.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -45,13 +45,15 @@ const Tasks = () => {
   );
   const [active, setActive] = useState("all");
   const translateX = useRef(new Animated.Value(0)).current;
+  const { selectedDate } = useSelector((state: RootState) => state.task);
 
   const dispatch = useDispatch<AppDispatch>();
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
-        const { data } = await getAssignedTask({ userId: user?._id });
-        console.log("data");
+        const { data } = await getAssignedTask({ userId: user?._id, sortDate:selectedDate });
+        console.log("data",data);
+   
         dispatch(setMyTask(data));
         dispatch(setFilterData(data));
       };
@@ -60,6 +62,7 @@ const Tasks = () => {
       }
     }, [user, updateTask])
   );
+  console.log(selectedDate, "selectedData")
   const handleTabPress = (assigned: boolean) => {
     setAssignedMe(assigned);
     Animated.timing(translateX, {
@@ -168,24 +171,24 @@ const Tasks = () => {
           )}
         </ScrollView>
       </View>
+      <AgendaCalendar tasks={sampleTasks} />
 
-      {/* <View>
+      <View style={{flex:1}}>
         <FlatList
           data={filterData}
           keyExtractor={(item) => item._id}
-          contentContainerStyle={{ paddingVertical: 20 }}
+          contentContainerStyle={{ paddingTop: 10, paddingBottom:80 }}
           style={{ height: "80%" }}
           renderItem={(task) => <TaskCard item={task.item} />}
           ListEmptyComponent={
             <View>
-              <Text>Task Bulunnamdı</Text>
+                <Text style={styles.noTaskText}>Bu tarihte görev yok</Text>
             </View>
           }
         />
-      </View> */}
+      </View>
 
       {/* <TaskTimeLine /> */}
-      <AgendaCalendar tasks={sampleTasks} />
     </View>
   );
 };
@@ -234,5 +237,10 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 8,
     paddingVertical: 8,
+  },
+   noTaskText: {
+    textAlign: "center",
+    color: "#6B7280",
+    marginTop: 20,
   },
 });

@@ -49,7 +49,7 @@ const TaskCard = ({ item }: TaskCardProps) => {
                 <Ionicons name="time" size={18} color={Colors.textLight} />
                 <View>
                   <Text style={styles.createDate}>
-                    {formatDates(item?.createdAt)}
+                    {formatDates(item?.dueDate)}
                   </Text>
                 </View>
               </View>
@@ -142,7 +142,7 @@ export default TaskCard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 15,
+    paddingVertical: 8,
     paddingHorizontal: 15,
     gap: 4,
   },
