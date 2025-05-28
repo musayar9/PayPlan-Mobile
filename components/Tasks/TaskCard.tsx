@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { TasksType } from "@/types/TaskType";
 import Colors from "@/constants/Colors";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { formatDates } from "@/utils/functions";
+import { formatDates, getTime } from "@/utils/functions";
 import StateStatus from "../StateStatus";
 import TaskProgress from "./TaskProgress";
 import StatusModal from "./StatusModal";
@@ -32,6 +32,12 @@ const TaskCard = ({ item }: TaskCardProps) => {
   });
   return (
     <View style={styles.container}>
+    
+    
+    <View style={{alignItems:"center", paddingBottom:5}}>
+    <Text style={{fontSize:14, fontWeight:"500", color:Colors.textLight}}>{getTime(item?.dueDate)}</Text>
+    </View>
+    
       <View style={styles.taskContent}>
         <View style={styles.taskContentHead}>
           <View style={styles.createTaskInfo}>

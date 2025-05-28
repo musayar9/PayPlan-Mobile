@@ -81,7 +81,7 @@ const TaskLists = ({ groupId, list }: TaskListProps) => {
 
   return (
     <TasksLayout groupId ={groupId} list={list} taskLength={tasks?.length} >
-      {tasks?.length === 0 && <EmptyTask />}
+      {tasks?.length === 0 && <EmptyTask title={" No tasks have been created for this group yet."} />}
        {list ? tasks?.map((item) => (
         <TaskListCard key={item?._id} item={item} setShowTask={setShowTask} />
       )): tasks?.slice(0, 3).map((item) => (

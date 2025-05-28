@@ -38,7 +38,7 @@ const StatusModal = ({
   const statuses = ["pending", "in-progress", "completed"];
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
-
+  const { selectedDate } = useSelector((state: RootState) => state.task);
   const isDisabled = statuses.includes(taskValues.taskStatus);
 
   const selectStatus = async (status: string) => {
@@ -49,7 +49,10 @@ const StatusModal = ({
       });
       setShowModal(false);
 
-      const { data } = await getAssignedTask({ userId: user?._id });
+      const { data } = await getAssignedTask({
+        userId: user?._id,
+        sortDate: selectedDate,
+      });
       dispatch(setMyTask(data));
       if (data) {
         dispatch(setFilterData(data));

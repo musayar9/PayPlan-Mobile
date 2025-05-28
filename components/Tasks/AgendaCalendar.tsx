@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { setFilterData, setMyTask, setSelectedDate } from "@/redux/taskSlice";
 import { getFullDate } from "@/utils/functions";
 import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, SetStateAction } from "react";
 import {
   View,
   Text,
@@ -22,9 +22,10 @@ interface Task {
 interface Props {
   tasks: Task[];
   initialDate?: string;
+  setActive:React.Dispatch<SetStateAction<string>>
 }
 
-const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
+const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate, setActive }) => {
   const flatListRef = useRef<FlatList>(null);
   const { user } = useSelector((state: RootState) => state.auth);
   const { selectedDate } = useSelector((state: RootState) => state.task);
@@ -61,6 +62,7 @@ const AgendaCalendar: React.FC<Props> = ({ tasks, initialDate }) => {
   const { day, month, dayName } = getFullDate(selectedDate);
 
   const handleDateChange = async (dateString: string) => {
+  setActive("all")
     dispatch(setSelectedDate(dateString));
     const { data } = await getAssignedTask({
       userId: user?._id,

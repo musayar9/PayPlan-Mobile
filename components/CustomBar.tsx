@@ -6,9 +6,10 @@ interface CustomBarProps {
   title: String;
   onPress: () => void;
   active: string;
+  isActive: boolean;
 }
 
-const CustomBar = ({ title, onPress, active }: CustomBarProps) => {
+const CustomBar = ({ title, onPress, active, isActive }: CustomBarProps) => {
   console.log("acty", active);
   const activeTab = () => {
     switch (title.toLowerCase()) {
@@ -26,10 +27,16 @@ const CustomBar = ({ title, onPress, active }: CustomBarProps) => {
   };
   return (
     <TouchableOpacity
-      style={[styles.statusBar, activeTab(active)]}
+      style={[
+        styles.statusBar,
+        {
+          backgroundColor: isActive ? Colors.palette.accent : Colors.palette.backgroundCard,
+          fontWeight: "500",
+        },
+      ]}
       onPress={onPress}
     >
-      <Text style={styles.statusBarTxt}>{title}</Text>
+      <Text style={[styles.statusBarTxt, {color:isActive ? Colors.palette.backgroundCard: Colors.palette.textPrimary}]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -41,20 +48,21 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: Colors.gray,
     backgroundColor: Colors.palette.backgroundCard,
-    borderRadius: 8,
+    borderRadius: 50,
     paddingVertical: 6,
     paddingHorizontal: 12,
     minWidth: 100,
-    marginTop: 20,
+    marginTop: 10,
   },
   statusBarTxt: {
     fontSize: 12,
     textAlign: "center",
     color: Colors.palette.textPrimary,
     textTransform: "lowercase",
+    fontWeight: 400,
   },
 
-  all: { backgroundColor: Colors.palette.accentLight, fontWeight: "500" },
+  all: { backgroundColor: Colors.palette.accent, fontWeight: "500" },
   pending: { backgroundColor: Colors.red400, fontWeight: "500" },
   inCompleted: { backgroundColor: Colors.primary, fontWeight: "500" },
   completed: { backgroundColor: Colors.green400, fontWeight: "500" },

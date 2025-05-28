@@ -21,10 +21,21 @@ import { setFilterData, setMyTask } from "@/redux/taskSlice";
 import TaskCalendar from "@/components/Tasks/TaskCalendar";
 import TaskTimeLine from "@/components/Tasks/TaskTimeLine";
 import AgendaCalendar from "@/components/Tasks/AgendaCalendar";
+import EmptyTask from "@/components/Tasks/EmptyTask";
+import AssignedToMe from "@/components/Tasks/AssignedToMe";
+import MyGroupTask from "@/components/Tasks/MyGroupTask";
 
-export const getAssignedTask = async ({ userId, sortDate }: { userId: String, sortDate:string }) => {
+export const getAssignedTask = async ({
+  userId,
+  sortDate,
+}: {
+  userId: String;
+  sortDate: string;
+}) => {
   try {
-    const res = await api.get(`/api/v1/tasks/assignedTo/${userId}?sortDate=${sortDate}`);
+    const res = await api.get(
+      `/api/v1/tasks/assignedTo/${userId}?sortDate=${sortDate}`
+    );
     return { data: res.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -43,7 +54,6 @@ const Tasks = () => {
   const { updateTask, taskUpdateLoading, myTask, filterData } = useSelector(
     (state: RootState) => state.task
   );
-  const [active, setActive] = useState("all");
   const translateX = useRef(new Animated.Value(0)).current;
   const { selectedDate } = useSelector((state: RootState) => state.task);
 
@@ -51,9 +61,11 @@ const Tasks = () => {
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {
-        const { data } = await getAssignedTask({ userId: user?._id, sortDate:selectedDate });
-        console.log("data",data);
-   
+        const { data } = await getAssignedTask({
+          userId: user?._id,
+          sortDate: selectedDate,
+        });
+
         dispatch(setMyTask(data));
         dispatch(setFilterData(data));
       };
@@ -62,7 +74,7 @@ const Tasks = () => {
       }
     }, [user, updateTask])
   );
-  console.log(selectedDate, "selectedData")
+
   const handleTabPress = (assigned: boolean) => {
     setAssignedMe(assigned);
     Animated.timing(translateX, {
@@ -71,27 +83,6 @@ const Tasks = () => {
       useNativeDriver: true,
     }).start();
   };
-
-  const status = ["all", ...new Set(myTask?.map((item) => item.status))];
-
-  const handleFilterCategory = async (category: string) => {
-    if (category === "all") {
-      setActive("all");
-      // setFilterData(myTask);
-      dispatch(setFilterData(myTask));
-    } else {
-      const filterResult = myTask.filter((item) => item?.status === category);
-      // setFilterData(filterResult);
-      dispatch(setFilterData(filterResult));
-      setActive(category);
-    }
-  };
-  const sampleTasks = [
-    { date: "2024-05-26", title: "React Native eğitimi" },
-    { date: "2024-05-27", title: "API bağlantısı yapılacak" },
-    { date: "2024-05-27", title: "Tasarım revizyonu" },
-    { date: "2024-05-28", title: "Sunum hazırlanacak" },
-  ];
 
   return (
     <View style={styles.container}>
@@ -151,42 +142,7 @@ const Tasks = () => {
         />
       </View>
       <View style={styles.headWrapper} />
-
-      <View style={{ marginHorizontal: 10 }}>
-        <ScrollView
-          style={{ width: "100%" }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.statusBarContent}
-        >
-          {["all", "pending", "in-progress", "completed"].map(
-            (title, index) => (
-              <CustomBar
-                key={index}
-                title={title}
-                onPress={() => handleFilterCategory(title)}
-                active={active}
-              />
-            )
-          )}
-        </ScrollView>
-      </View>
-      <AgendaCalendar tasks={sampleTasks} />
-
-      <View style={{flex:1}}>
-        <FlatList
-          data={filterData}
-          keyExtractor={(item) => item._id}
-          contentContainerStyle={{ paddingTop: 10, paddingBottom:80 }}
-          style={{ height: "80%" }}
-          renderItem={(task) => <TaskCard item={task.item} />}
-          ListEmptyComponent={
-            <View>
-                <Text style={styles.noTaskText}>Bu tarihte görev yok</Text>
-            </View>
-          }
-        />
-      </View>
+      {assignedMe ? <AssignedToMe /> : <MyGroupTask />}
 
       {/* <TaskTimeLine /> */}
     </View>
@@ -238,7 +194,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
   },
-   noTaskText: {
+  noTaskText: {
     textAlign: "center",
     color: "#6B7280",
     marginTop: 20,
