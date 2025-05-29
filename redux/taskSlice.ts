@@ -1,3 +1,4 @@
+import { getTasksByGroupId } from "@/services/tasks/tasksService";
 import { TasksType } from "@/types/TaskType";
 import { createSlice } from "@reduxjs/toolkit";
 import { act } from "react";
@@ -6,9 +7,12 @@ interface TaskState {
   taskId: String;
   updateTask: Boolean;
   taskUpdateLoading: Boolean;
-  myTask: [] ;
+  myTask: [];
   filterData: TasksType[] | null;
   selectedDate?: string;
+  groupTasks: TasksType[] | null;
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: TaskState = {
@@ -18,6 +22,9 @@ const initialState: TaskState = {
   filterData: null,
   myTask: null,
   selectedDate: new Date().toISOString().split("T")[0],
+  groupTasks:null,
+  loading:false,
+  error:null
 };
 
 const taskSlice = createSlice({
@@ -43,6 +50,22 @@ const taskSlice = createSlice({
       state.selectedDate = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getTasksByGroupId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTasksByGroupId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.groupTasks = action.payload;
+        state.error = null;
+      })
+      .addCase(getTasksByGroupId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
 });
 
 export const {
@@ -51,6 +74,6 @@ export const {
   setUpdateTaskLoading,
   setMyTask,
   setFilterData,
-  setSelectedDate
+  setSelectedDate,
 } = taskSlice.actions;
 export default taskSlice.reducer;

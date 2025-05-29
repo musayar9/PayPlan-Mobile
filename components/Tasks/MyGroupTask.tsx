@@ -1,11 +1,41 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import Colors from "@/constants/Colors";
+import { useFocusEffect } from "expo-router";
+import { getTasksByGroupId } from "@/services/tasks/tasksService";
+import TaskCard from "./TaskCard";
+import { getGroupById } from "@/services/group/groupService";
 
 const MyGroupTask = () => {
-  const { group } = useSelector((state: RootState) => state.group);
+  const { group, groupDetail } = useSelector((state: RootState) => state.group);
+  const { groupTasks, } = useSelector((state: RootState) => state.task);
+  const dispatch = useDispatch<AppDispatch>();
+  const [selectId, setSelectId] = useState(group[0]?._id);
+  const [active, setActive] = useState(false);
+  useFocusEffect(
+    useCallback(() => {
+      if (group) {
+        dispatch(getTasksByGroupId(selectId));
+        dispatch(getGroupById(selectId))
+      }
+
+      // Cleanup varsa burada yazabilirsiniz
+    }, [group, selectId, dispatch])
+  );
+  const handleGroupPress = (groupId: string) => {
+
+    setSelectId(groupId);
+    // Navigate to the group detail page or perform any action with the group ID
+  };
 
   return (
     <View style={styles.container}>
@@ -21,7 +51,10 @@ const MyGroupTask = () => {
           paddingHorizontal: 10,
         }}
         renderItem={({ item }) => (
-          <View style={styles.groupContent}>
+          <TouchableOpacity
+            onPress={() => handleGroupPress(item._id)}
+            style={styles.groupContent}
+          >
             <Image
               source={{
                 uri: item.groupPicture
@@ -31,9 +64,20 @@ const MyGroupTask = () => {
               style={styles.groupImage}
             />
             <Text style={styles.groupNameText}>{item.name}</Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
+
+      <View>
+        <FlatList
+          data={groupTasks}
+          keyExtractor={(item) => item._id}
+          ListHeaderComponent={()=><View><Text>{groupTasks[0]?.group?.name}</Text></View>}
+          renderItem={({ item }) => (
+           <TaskCard item={item} isAssignedMe={false}/>
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -51,15 +95,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 4,
     paddingHorizontal: 10,
-    gap: 2,
+    gap: 4,
   },
   groupNameText: {
     fontSize: 12,
     color: Colors.palette.textSecondary,
   },
   groupImage: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     borderRadius: 50,
   },
 });

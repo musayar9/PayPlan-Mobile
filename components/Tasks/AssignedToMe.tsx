@@ -58,7 +58,8 @@ const dispatch = useDispatch<AppDispatch>()
           keyExtractor={(item) => item._id}
           contentContainerStyle={{ paddingTop: 10, paddingBottom: 80 }}
           style={{ height: "80%" }}
-          renderItem={(task) => <TaskCard item={task.item} />}
+          renderItem={(task) => <TaskCard isAssigned={true} item={task.item} />}
+          
           ListEmptyComponent={
             <EmptyTask
               title="You have no tasks assigned."

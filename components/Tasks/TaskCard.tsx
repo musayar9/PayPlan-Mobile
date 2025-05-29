@@ -19,38 +19,65 @@ import { RootState } from "@/redux/store";
 
 interface TaskCardProps {
   item: TasksType;
+  isAssigned?: boolean;
 }
 
-const TaskCard = ({ item }: TaskCardProps) => {
+const TaskCard = ({ item, isAssigned }: TaskCardProps) => {
   const { updateTask, taskUpdateLoading, filterData } = useSelector(
     (state: RootState) => state.task
   );
+  const { user } = useSelector((state: RootState) => state.auth);
   const [showModal, setShowModal] = useState(false);
   const [taskValues, setTaskValues] = useState({
     taskId: "",
     taskStatus: "",
   });
+  console.log("ass", item.assignedTo.profilePicture);
   return (
     <View style={styles.container}>
     
     
-    <View style={{alignItems:"center", paddingBottom:5}}>
-    <Text style={{fontSize:14, fontWeight:"500", color:Colors.textLight}}>{getTime(item?.dueDate)}</Text>
-    </View>
     
+      <View style={{ alignItems: "center", paddingBottom: 5 }}>
+        <Text
+          style={{ fontSize: 14, fontWeight: "500", color: Colors.textLight }}
+        >
+          {getTime(item?.dueDate)}
+        </Text>
+      </View>
+
       <View style={styles.taskContent}>
         <View style={styles.taskContentHead}>
           <View style={styles.createTaskInfo}>
-            <Image
-              source={{
-                uri: item.group.groupPicture
-                  ? `data:image/png;base64,${item.group.groupPicture}`
-                  : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
-              }}
-              style={styles.groupImage}
-            />
+            {isAssigned ? (
+              <Image
+                source={{
+                  uri: item.group.groupPicture
+                    ? `data:image/png;base64,${item.group.groupPicture}`
+                    : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
+                }}
+                style={styles.groupImage}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: item?.assignedTo.profilePicture
+                    ? `${item.assignedTo?.profilePicture}`
+                    : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
+                }}
+                style={[styles.groupImage, { width: 50, height: 50 }]}
+              />
+            )}
+
             <View>
-              <Text style={styles.cTaskLabel}>{item.group.name}</Text>
+              <Text style={styles.cTaskLabel}>
+                {isAssigned
+                  ? item.group.name
+                  : `${item.assignedTo.name} ${item.assignedTo.surname}`}
+              </Text>
+              {isAssigned || (
+                <Text style={styles.createDate}>{item.assignedTo.email}</Text>
+              )}
               <View style={styles.createTaskInfo}>
                 <Ionicons name="time" size={18} color={Colors.textLight} />
                 <View>
@@ -95,31 +122,33 @@ const TaskCard = ({ item }: TaskCardProps) => {
             marginVertical: 8,
           }}
         >
-          <TouchableOpacity
-            disabled={item.status === "completed"}
-            onPress={() => {
-              setShowModal(true);
-              setTaskValues({ taskId: item?._id, taskStatus: item.status });
-            }}
-            style={[
-              styles.editBtn,
-
-              item.status.toLowerCase() === "completed"
-                ? styles.isCompleted
-                : styles.isNotCompleted,
-            ]}
-          >
-            <Ionicons name="pencil" color={Colors.background} size={16} />
-            <Text
-              style={{
-                fontWeight: "600",
-                fontSize: 12,
-                color: Colors.background,
+          {isAssigned || user?._id === item?.assignedTo?._id ? (
+            <TouchableOpacity
+              disabled={item.status === "completed"}
+              onPress={() => {
+                setShowModal(true);
+                setTaskValues({ taskId: item?._id, taskStatus: item.status });
               }}
+              style={[
+                styles.editBtn,
+
+                item.status.toLowerCase() === "completed"
+                  ? styles.isCompleted
+                  : styles.isNotCompleted,
+              ]}
             >
-              {item.status === "completed" ? "Edited" : "Edit"}
-            </Text>
-          </TouchableOpacity>
+              <Ionicons name="pencil" color={Colors.background} size={16} />
+              <Text
+                style={{
+                  fontWeight: "600",
+                  fontSize: 12,
+                  color: Colors.background,
+                }}
+              >
+                {item.status === "completed" ? "Edited" : "Edit"}
+              </Text>
+            </TouchableOpacity>
+          ) : <View></View>}
 
           {taskUpdateLoading && item._id === taskValues.taskId ? (
             <ActivityIndicator size="small" color="#0000ff" />
