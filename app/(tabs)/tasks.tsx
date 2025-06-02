@@ -30,7 +30,7 @@ export const getAssignedTask = async ({
   sortDate,
 }: {
   userId: String;
-  sortDate: string;
+  sortDate?: string;
 }) => {
   try {
     const res = await api.get(

@@ -1,4 +1,4 @@
-import { getTasksByGroupId } from "@/services/tasks/tasksService";
+import { getTasksByGroupId, getTasksByUserId } from "@/services/tasks/tasksService";
 import { TasksType } from "@/types/TaskType";
 import { createSlice } from "@reduxjs/toolkit";
 import { act } from "react";
@@ -13,6 +13,7 @@ interface TaskState {
   groupTasks: TasksType[] | null;
   loading: boolean;
   error: string | null;
+  getTasksByUser: TasksType[] | null;
 }
 
 const initialState: TaskState = {
@@ -22,9 +23,9 @@ const initialState: TaskState = {
   filterData: null,
   myTask: null,
   selectedDate: new Date().toISOString().split("T")[0],
-  groupTasks:null,
-  loading:false,
-  error:null
+  groupTasks: null,
+  loading: false,
+  error: null,
 };
 
 const taskSlice = createSlice({
@@ -64,6 +65,9 @@ const taskSlice = createSlice({
       .addCase(getTasksByGroupId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(getTasksByUserId.fulfilled, (state, action) => {
+        state.getTasksByUser = action.payload;
       });
   },
 });

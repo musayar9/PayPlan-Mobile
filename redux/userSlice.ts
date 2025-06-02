@@ -2,9 +2,10 @@ import { login, register } from "@/services/auth/authService";
 import { createSlice } from "@reduxjs/toolkit";
 import { isLoading } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { User } from "@/types/authType";
 
 interface UserState {
-  user: null;
+  user:User |  null;
   isLoading: boolean;
   error: null;
   message: string;
