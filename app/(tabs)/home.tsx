@@ -34,6 +34,7 @@ const Home = () => {
   };
 
   const router = useRouter();
+  console.log("yser", user?._id)
 
   return (
     <View style={styles.container}>
@@ -98,7 +99,11 @@ const Home = () => {
             ]}
           >
             <Image
-              source={require("@/assets/images/itachi.jpeg")}
+              source={{
+                uri:
+                  `data:image/jpeg;base64,${user?.profilePicture}` ||
+                  "https://via.placeholder.com/150",
+              }}
               style={styles.profilePicture}
             />
           </Link>

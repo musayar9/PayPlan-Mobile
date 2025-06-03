@@ -18,12 +18,16 @@ import { setMyTask } from "@/redux/taskSlice";
 import { getTasksByUserId } from "@/services/tasks/tasksService";
 import ProfileBadge from "@/components/Profile/ProfileBadge";
 import * as ImagePicker from "expo-image-picker";
+import ProfileContent from "@/components/Profile/ProfileContent";
+import { api } from "@/utils/api";
+import { getUserProfile } from "@/services/auth/authService";
 const { width, height } = Dimensions.get("screen");
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { group } = useSelector((state: RootState) => state.group);
   const { getTasksByUser } = useSelector((state: RootState) => state.task);
   const [profilePicture, setProfilePicture] = useState();
+  const [successMsg, setSuccessMsg] = useState("");
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -50,17 +54,28 @@ const Profile = () => {
         quality: 1,
         base64: true,
       });
-      console.log("result", result);
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        setProfilePicture(result.assets[0].base64 );
+        setProfilePicture(result.assets[0].base64);
+
+        const res = await api.put(
+          `/api/v1/users/${user?._id}/profile-picture`,
+          {
+            profilePicture: result.assets[0].base64,
+          }
+        );
+        console.log("res", res.data.message);
+
+        if (res.status === 200) {
+          setSuccessMsg(res.data.message);
+          await dispatch(getUserProfile(user?._id));
+        }
       }
     } catch (error) {
-      console.log(error);
+      console.log("tasksError", error);
     }
   };
 
-  console.log("user", getTasksByUser?.length);
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -68,10 +83,23 @@ const Profile = () => {
           <View style={styles.pictureContent}>
             <Image
               style={styles.profilePicture}
-              source={{ uri: user?.profilePicture }}
+              source={{
+                uri: profilePicture
+                  ? `data:image/jpeg;base64,${profilePicture}`
+                  : user?.profilePicture
+                  ? user?.profilePicture.startsWith("data:image")
+                    ? user?.profilePicture
+                    : user?.profilePicture.startsWith("http")
+                    ? user?.profilePicture
+                    : `data:image/jpeg;base64,${user?.profilePicture}`
+                  : "https://via.placeholder.com/150",
+              }}
             />
           </View>
-          <TouchableOpacity style={styles.cameraBtn} onPress={handleImagePicker}>
+          <TouchableOpacity
+            style={styles.cameraBtn}
+            onPress={handleImagePicker}
+          >
             <Ionicons
               name="camera"
               size={18}
@@ -93,6 +121,8 @@ const Profile = () => {
           groupCount={group?.length}
           taskCount={getTasksByUser?.length}
         />
+
+        <ProfileContent />
 
         <CustomButton
           text="Sign Out"
@@ -136,8 +166,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.palette.accent,
     paddingVertical: 8,
     paddingHorizontal: 20,
-    borderRadius: 20,
-    marginTop: 20,
+    borderRadius: 10,
+    marginTop: 8,
   },
   profileContent: {
     marginVertical: 20,

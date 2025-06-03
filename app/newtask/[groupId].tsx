@@ -128,15 +128,15 @@ const CreateTask = () => {
       return res.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("error", error.response?.data.message);
+        console.log("groupId", error.response?.data.message);
       } else {
-        console.log("error", error);
+        console.log("groupId", error);
       }
     } finally {
       setLoading(false);
     }
   };
-  console.log("time", getTime(time));
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>

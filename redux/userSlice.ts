@@ -1,11 +1,11 @@
-import { login, register } from "@/services/auth/authService";
+import { getUserProfile, login, register } from "@/services/auth/authService";
 import { createSlice } from "@reduxjs/toolkit";
 import { isLoading } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "@/types/authType";
 
 interface UserState {
-  user:User |  null;
+  user: User | null;
   isLoading: boolean;
   error: null;
   message: string;
@@ -73,6 +73,19 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
         state.message = action.error.message;
+      })
+      .addCase(getUserProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getUserProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(getUserProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });

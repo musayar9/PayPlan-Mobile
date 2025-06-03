@@ -54,7 +54,7 @@ const groupSlice = createSlice({
       .addCase(getMyGroups.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
-        state.message = action.error.message;
+        state.message = action.error;
       })
       .addCase(getGroupById.pending, (state) => {
         state.isLoading = true;
@@ -67,6 +67,7 @@ const groupSlice = createSlice({
       .addCase(getGroupById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        state.message= action.error.message
       });
   },
 });

@@ -11,7 +11,7 @@ import GroupLayout from "./GroupLayout";
 
 const Groups = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { group, isLoading, error } = useSelector(
+  const { group, isLoading, error, message } = useSelector(
     (state: RootState) => state.group
   );
   const { user } = useSelector((state: RootState) => state.auth);
@@ -28,7 +28,8 @@ const Groups = () => {
       }
     }, [dispatch, user])
   );
-  console.log("error", error);
+  console.log("groupERROR", error);
+  console.log("group", message)
 
   if (isLoading) {
     return (

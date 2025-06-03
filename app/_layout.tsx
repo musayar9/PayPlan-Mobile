@@ -53,6 +53,12 @@ export default function RootLayout() {
             options={{ headerShown: false }}
           />
 
+          <Stack.Screen name="profile/editProfile" />
+          <Stack.Screen name="profile/notifications" />
+          <Stack.Screen name="profile/themeAppearance" />
+          <Stack.Screen name="profile/language" />
+          <Stack.Screen name="profile/helpSupport" />
+
           {/* <Stack.Screen
           name="modal"
           options={{

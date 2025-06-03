@@ -13,7 +13,9 @@ const ProfileBadge = ({ groupCount, taskCount }: ProfileBadgeProps) => {
   return (
     <View style={styles.badgeContent}>
       <View style={styles.badgeArea}>
-        <Text style={[styles.badgeText, {color:Colors.red600}]}>{groupCount}</Text>
+        <Text style={[styles.badgeText, { color: Colors.red600 }]}>
+          {groupCount}
+        </Text>
         <View style={styles.badgeIconContent}>
           <Text style={styles.badgeHeadText}>My Groups</Text>
 
@@ -21,7 +23,9 @@ const ProfileBadge = ({ groupCount, taskCount }: ProfileBadgeProps) => {
         </View>
       </View>
       <View style={styles.badgeArea}>
-        <Text style={[styles.badgeText, {color:Colors.blue600}]}>{taskCount}</Text>
+        <Text style={[styles.badgeText, { color: Colors.blue600 }]}>
+          {taskCount}
+        </Text>
         <View style={styles.badgeIconContent}>
           <Text style={styles.badgeHeadText}>My Tasks</Text>
           <Ionicons name="list" size={28} color={Colors.blue600} />
@@ -47,19 +51,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.38,
-    shadowRadius: 4.84,
-    elevation: 5,
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.38,
+    // shadowRadius: 4.84,
+    // elevation: 2,
   },
   badgeText: {
     fontSize: 28,
     fontWeight: 600,
-   
   },
   badgeIconContent: {
     alignItems: "center",
