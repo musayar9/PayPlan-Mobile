@@ -36,7 +36,7 @@ const CustomInput = ({
   labelStatus,
   ...props
 }: CustomInputProps) => {
-  console.log("lavel", labelStatus);
+
   return (
     <View style={{ position: "relative", width: width }}>
       <Text

@@ -57,8 +57,9 @@ export const login = createAsyncThunk(
 );
 
 export const getUserProfile = createAsyncThunk(
-  "user/getProfile",
+  "user/getUserProfile",
   async (userId: string, { rejectWithValue }) => {
+    console.log("userId", userId);
     try {
       const response = await api.get(`/api/v1/users/${userId}`);
       return response.data;

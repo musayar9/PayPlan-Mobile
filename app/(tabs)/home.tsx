@@ -34,7 +34,7 @@ const Home = () => {
   };
 
   const router = useRouter();
-  console.log("yser", user?._id)
+  console.log("yser", user?._id);
 
   return (
     <View style={styles.container}>
@@ -100,9 +100,7 @@ const Home = () => {
           >
             <Image
               source={{
-                uri:
-                  `data:image/jpeg;base64,${user?.profilePicture}` ||
-                  "https://via.placeholder.com/150",
+                uri: user?.profilePicture,
               }}
               style={styles.profilePicture}
             />

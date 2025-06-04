@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   StyleSheet,
@@ -6,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import Colors from "@/constants/Colors";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,14 +22,27 @@ import * as ImagePicker from "expo-image-picker";
 import ProfileContent from "@/components/Profile/ProfileContent";
 import { api } from "@/utils/api";
 import { getUserProfile } from "@/services/auth/authService";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "@/utils/firebase";
 const { width, height } = Dimensions.get("screen");
 const Profile = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, isLoading } = useSelector((state: RootState) => state.auth);
   const { group } = useSelector((state: RootState) => state.group);
   const { getTasksByUser } = useSelector((state: RootState) => state.task);
-  const [profilePicture, setProfilePicture] = useState();
+  const [profilePicture, setProfilePicture] = useState(user?.profilePicture);
+  const [updateImage, setUpdateImage] = useState(false);
+  const [imagePercent, setImagePercent] = useState(0);
+  const [imageError, setImageError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const imageRef = useRef<HTMLInputElement | null>(null);
   const [successMsg, setSuccessMsg] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState();
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getTasksByUserId(user?._id));
@@ -39,10 +53,54 @@ const Profile = () => {
     router.push("/(auth)/login");
   };
 
+  // Profil fotoğrafı yükleme ve seçme işlemlerini birleştiren fonksiyonlar
+  // const handleImagePicker = async () => {
+  //   try {
+  //     const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     if (status.status !== "granted") {
+  //       alert("Sorry, we need camera roll permissions to make this work!");
+  //       return;
+  //     }
+
+  //     const result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //       allowsEditing: true,
+  //       aspect: [4, 3],
+  //       quality: 1,
+  //       base64: true,
+  //     });
+
+  //     if (!result.canceled && result.assets && result.assets.length > 0) {
+  //       setProfilePicture(result.assets[0].base64);
+
+  //       // Eğer resmi Firebase Storage'a da yüklemek isterseniz:
+  //       // await handleFileUpload(result.assets[0]);
+
+  //       // API'ye base64 olarak gönder
+  //       const res = await api.put(
+  //         `/api/v1/users/${user?._id}/profile-picture`,
+  //         {
+  //           profilePicture: result.assets[0].base64,
+  //         }
+  //       );
+  //       console.log("res", res.data.message);
+
+  //       if (res.status === 200) {
+  //         setSuccessMsg(res.data.message);
+  //         await dispatch(getUserProfile(user?._id));
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log("tasksError", error);
+  //   }
+  // };
+
+  // Firebase Storage'a dosya yüklemek için (şu an kullanılmıyor, isterseniz aktif edebilirsiniz)
   const handleImagePicker = async () => {
     try {
-      const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status.status !== "granted") {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
         alert("Sorry, we need camera roll permissions to make this work!");
         return;
       }
@@ -56,23 +114,77 @@ const Profile = () => {
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        setProfilePicture(result.assets[0].base64);
+        const asset = result.assets[0];
+        setProfilePicture(`data:image/png;base64,${result.assets[0].base64}`);
 
-        const res = await api.put(
-          `/api/v1/users/${user?._id}/profile-picture`,
-          {
-            profilePicture: result.assets[0].base64,
+        const downloadURL = await handleFileUpload(asset); // ✅ Artık sonucu döndürüyor
+        if (downloadURL) {
+          setLoading(true);
+          const res = await api.put(
+            `/api/v1/users/${user?._id}/profile-picture`,
+            { profilePicture: downloadURL }
+          );
+          if (res.status === 200) {
+            setSuccessMsg(res.data.message);
+            dispatch(getUserProfile(user?._id));
+            setLoading(false);
           }
-        );
-        console.log("res", res.data.message);
-
-        if (res.status === 200) {
-          setSuccessMsg(res.data.message);
-          await dispatch(getUserProfile(user?._id));
         }
       }
     } catch (error) {
-      console.log("tasksError", error);
+      console.log("ImagePicker error:", error);
+    }
+  };
+
+  const handleFileUpload = async (
+    asset: ImagePicker.ImagePickerAsset
+  ): Promise<string | null> => {
+    try {
+      setUpdateImage(true);
+      if (!asset.uri) return null;
+
+      const response = await fetch(asset.uri);
+      const blob = await response.blob();
+
+      const storage = getStorage(app);
+      const fileName = `${Date.now()}-${asset.fileName || "profile.jpg"}`;
+      const storageRef = ref(storage, fileName);
+
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const loading =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setImagePercent(Math.round(loading));
+            setUpdateImage(true);
+            if (loading === 100) {
+              setUpdateImage(false);
+            }
+          },
+          (error) => {
+            console.log("Upload error:", error);
+            setImageError(true);
+            setErrorMessage(error.message);
+            reject(null);
+          },
+          async () => {
+            try {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(url);
+            } catch (err) {
+              reject(null);
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.log("File upload error:", error);
+      return null;
+    } finally {
+      setUpdateImage(false);
     }
   };
 
@@ -82,19 +194,28 @@ const Profile = () => {
         <View style={styles.profileImageContent}>
           <View style={styles.pictureContent}>
             <Image
+              ref={imageRef}
               style={styles.profilePicture}
               source={{
-                uri: profilePicture
-                  ? `data:image/jpeg;base64,${profilePicture}`
-                  : user?.profilePicture
-                  ? user?.profilePicture.startsWith("data:image")
-                    ? user?.profilePicture
-                    : user?.profilePicture.startsWith("http")
-                    ? user?.profilePicture
-                    : `data:image/jpeg;base64,${user?.profilePicture}`
-                  : "https://via.placeholder.com/150",
+                uri: profilePicture,
               }}
             />
+            {updateImage  && (
+              <View
+                style={{
+                  position: "absolute",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(104, 167, 240, 0.8)",
+                  // opacity:0.8,
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 50,
+                }}
+              >
+                <ActivityIndicator color={"#00d5be"} />
+              </View>
+            )}
           </View>
           <TouchableOpacity
             style={styles.cameraBtn}
@@ -109,6 +230,9 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
 
+        <View>
+          <View>{updateImage && <Text style={{color:"#00d5be", fontWeight:"bold"}}>{`Uploading...`}</Text>}</View>
+        </View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <Text style={[styles.subText, styles.textColor]}>
             {user?.name} {user?.surname}
