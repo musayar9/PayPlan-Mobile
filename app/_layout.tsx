@@ -53,7 +53,10 @@ export default function RootLayout() {
             options={{ headerShown: false }}
           />
 
-          <Stack.Screen name="profile/editProfile" />
+          <Stack.Screen
+            name="profile/editProfile"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="profile/notifications" />
           <Stack.Screen name="profile/themeAppearance" />
           <Stack.Screen name="profile/language" />

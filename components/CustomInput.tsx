@@ -21,6 +21,8 @@ interface CustomInputProps extends TextInputProps {
   status?: string;
   numberOfLines?: number;
   inputHeight?: number;
+  disabledStatus?:boolean
+
 }
 
 const CustomInput = ({
@@ -34,6 +36,8 @@ const CustomInput = ({
   numberOfLines,
   inputHeight,
   labelStatus,
+  disabledStatus,
+
   ...props
 }: CustomInputProps) => {
 
@@ -44,7 +48,7 @@ const CustomInput = ({
           styles.labelText,
           {
             backgroundColor:
-              labelStatus === "auth" ? Colors.lightBlur : Colors.background,
+              (labelStatus === "auth" ) ?   Colors.lightBlur :  disabledStatus ? Colors.borderLight : Colors.palette.backgroundCard,
           },
         ]}
       >
@@ -54,12 +58,14 @@ const CustomInput = ({
         {...props}
         value={value}
         placeholder={placeholder}
-        style={[styles.input, inputHeight]}
+        style={[styles.input, inputHeight, {backgroundColor:disabledStatus ?Colors.borderLight :"transparent" }]}
         numberOfLines={numberOfLines}
+        disableKeyboardShortcuts={disabledStatus}
+        disableFullscreenUI={disabledStatus}
       />
 
       {status === "password" && (
-        <TouchableOpacity onPress={onPress} style={styles.iconBtn}>
+        <TouchableOpacity onPress={onPress} style={styles.iconBtn} >
           <Ionicons
             name={isPassword ? "eye" : "eye-off"}
             size={20}
@@ -83,6 +89,7 @@ const styles = StyleSheet.create({
     width: "auto",
     paddingHorizontal: 16,
     textTransform: "capitalize",
+    borderRadius:4
   },
 
   input: {

@@ -276,9 +276,9 @@ const styles = StyleSheet.create({
 
   forms: {
     gap: 10,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.palette.backgroundCard,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 12,
   },
 
   imageContent: {

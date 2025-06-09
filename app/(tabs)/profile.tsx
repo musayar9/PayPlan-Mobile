@@ -29,16 +29,29 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "@/utils/firebase";
+import { useHandleFileUpload } from "@/utils/customHooks";
 const { width, height } = Dimensions.get("screen");
 const Profile = () => {
   const { user, isLoading } = useSelector((state: RootState) => state.auth);
   const { group } = useSelector((state: RootState) => state.group);
   const { getTasksByUser } = useSelector((state: RootState) => state.task);
   const [profilePicture, setProfilePicture] = useState(user?.profilePicture);
-  const [updateImage, setUpdateImage] = useState(false);
-  const [imagePercent, setImagePercent] = useState(0);
-  const [imageError, setImageError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [updateImage, setUpdateImage] = useState(false);
+  // const [imagePercent, setImagePercent] = useState(0);
+  // const [imageError, setImageError] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState("");
+
+  const {
+    updateImage,
+    setUpdateImage,
+    errorMessage,
+    setErrorMessage,
+    imageError,
+    setImageError,
+    imagePercent,
+    setImagePercent,
+    handleFileUpload
+  } = useHandleFileUpload();
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [successMsg, setSuccessMsg] = useState("");
   const router = useRouter();
@@ -136,57 +149,57 @@ const Profile = () => {
     }
   };
 
-  const handleFileUpload = async (
-    asset: ImagePicker.ImagePickerAsset
-  ): Promise<string | null> => {
-    try {
-      setUpdateImage(true);
-      if (!asset.uri) return null;
+  // const handleFileUpload = async (
+  //   asset: ImagePicker.ImagePickerAsset
+  // ): Promise<string | null> => {
+  //   try {
+  //     setUpdateImage(true);
+  //     if (!asset.uri) return null;
 
-      const response = await fetch(asset.uri);
-      const blob = await response.blob();
+  //     const response = await fetch(asset.uri);
+  //     const blob = await response.blob();
 
-      const storage = getStorage(app);
-      const fileName = `${Date.now()}-${asset.fileName || "profile.jpg"}`;
-      const storageRef = ref(storage, fileName);
+  //     const storage = getStorage(app);
+  //     const fileName = `${Date.now()}-${asset.fileName || "profile.jpg"}`;
+  //     const storageRef = ref(storage, fileName);
 
-      const uploadTask = uploadBytesResumable(storageRef, blob);
+  //     const uploadTask = uploadBytesResumable(storageRef, blob);
 
-      return new Promise((resolve, reject) => {
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const loading =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setImagePercent(Math.round(loading));
-            setUpdateImage(true);
-            if (loading === 100) {
-              setUpdateImage(false);
-            }
-          },
-          (error) => {
-            console.log("Upload error:", error);
-            setImageError(true);
-            setErrorMessage(error.message);
-            reject(null);
-          },
-          async () => {
-            try {
-              const url = await getDownloadURL(uploadTask.snapshot.ref);
-              resolve(url);
-            } catch (err) {
-              reject(null);
-            }
-          }
-        );
-      });
-    } catch (error) {
-      console.log("File upload error:", error);
-      return null;
-    } finally {
-      setUpdateImage(false);
-    }
-  };
+  //     return new Promise((resolve, reject) => {
+  //       uploadTask.on(
+  //         "state_changed",
+  //         (snapshot) => {
+  //           const loading =
+  //             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //           setImagePercent(Math.round(loading));
+  //           setUpdateImage(true);
+  //           if (loading === 100) {
+  //             setUpdateImage(false);
+  //           }
+  //         },
+  //         (error) => {
+  //           console.log("Upload error:", error);
+  //           setImageError(true);
+  //           setErrorMessage(error.message);
+  //           reject(null);
+  //         },
+  //         async () => {
+  //           try {
+  //             const url = await getDownloadURL(uploadTask.snapshot.ref);
+  //             resolve(url);
+  //           } catch (err) {
+  //             reject(null);
+  //           }
+  //         }
+  //       );
+  //     });
+  //   } catch (error) {
+  //     console.log("File upload error:", error);
+  //     return null;
+  //   } finally {
+  //     setUpdateImage(false);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -200,7 +213,7 @@ const Profile = () => {
                 uri: profilePicture,
               }}
             />
-            {updateImage  && (
+            {updateImage && (
               <View
                 style={{
                   position: "absolute",
@@ -231,7 +244,13 @@ const Profile = () => {
         </View>
 
         <View>
-          <View>{updateImage && <Text style={{color:"#00d5be", fontWeight:"bold"}}>{`Uploading...`}</Text>}</View>
+          <View>
+            {updateImage && (
+              <Text
+                style={{ color: "#00d5be", fontWeight: "bold" }}
+              >{`Uploading...`}</Text>
+            )}
+          </View>
         </View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <Text style={[styles.subText, styles.textColor]}>
