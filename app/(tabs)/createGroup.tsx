@@ -27,6 +27,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { createGroup, getMyGroups } from "@/services/group/groupService";
 import { api } from "@/utils/api";
 import CustomHeader from "@/components/CustomHeader";
+import { useHandleFileUpload } from "@/utils/customHooks";
 const CreateGroup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -39,9 +40,11 @@ const CreateGroup = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [group, setGroup] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectImage, setSelectedImage] = useState("");
   const [error, setError] = useState(null);
   const { membersList } = useSelector((state) => state.group);
   const router = useRouter();
+  const { handleFileUpload, imageUrl } = useHandleFileUpload();
   const handleImagePicker = async () => {
     try {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -57,10 +60,10 @@ const CreateGroup = () => {
         quality: 1,
         base64: true,
       });
-      console.log("result", result);
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         setFormData({ ...formData, groupPicture: result.assets[0].base64 });
+        setSelectedImage(result.assets[0]);
       }
     } catch (error) {
       console.log(error);
@@ -73,34 +76,35 @@ const CreateGroup = () => {
   };
 
   const handleCreateGroup = async () => {
-    const groupData = {
-      name: formData.name,
-      description: formData.description,
-      groupPicture: formData.groupPicture,
-      members: membersList.map((member) => member._id),
-      createdBy: user?._id, // Replace with actual user ID
-    };
-
     try {
       setIsLoading(true);
-      const response = await api.post("/api/v1/groups", groupData);
-      if (response.status === 201) {
-        setFormData({
-          name: "",
-          description: "",
-          groupPicture: "",
-        });
-        setGroup(response.data.group);
-        // await dispatch(getMyGroups(user?._id));
-        await dispatch(setMembersList([]));
-        router.push("/home");
+      const uploadedImageUrl = await handleFileUpload(selectImage);
+      console.log("uploa", uploadedImageUrl, "uplaod");
+      if (uploadedImageUrl) {
+        const groupData = {
+          name: formData.name,
+          description: formData.description,
+          groupPicture: uploadedImageUrl,
+          members: membersList.map((member) => member._id),
+          createdBy: user?._id,
+        };
+
+        const response = await api.post("/api/v1/groups", groupData);
+        if (response.status === 201) {
+          setFormData({
+            name: "",
+            description: "",
+            groupPicture: "",
+          });
+          setGroup(response.data.group);
+          await dispatch(setMembersList([]));
+          router.push("/home");
+        }
+        return response.data;
       }
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || "Bilinmeyen bir hata oluştu.";
-        setError(message);
+    } catch (err: any) {
+      if (err?.response?.data?.message) {
+        setError(err.response.data.message);
       } else {
         setError("Bilinmeyen bir hata oluştu.");
       }
@@ -108,7 +112,7 @@ const CreateGroup = () => {
       setIsLoading(false);
     }
   };
-  console.log("erro", error);
+
   useEffect(() => {
     if (user?._id && !membersList.some((member) => member._id === user._id)) {
       const list = [...membersList, user];

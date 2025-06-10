@@ -15,7 +15,7 @@ const GroupCard = ({ item }: { item: GroupsType }) => {
       <Image
         source={{
           uri: item.groupPicture
-            ? `data:image/png;base64,${item.groupPicture}`
+            ? item.groupPicture
             : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
         }}
         style={styles.groupImage}

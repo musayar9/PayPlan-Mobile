@@ -23,7 +23,7 @@ export const useHandleFileUpload = () => {
   ): Promise<string | null> => {
     try {
       setUpdateImage(true);
-      console.log("aset", asset);
+
       if (!asset.uri) return null;
 
       const response = await fetch(asset.uri);

@@ -6,13 +6,14 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import CustomBackButton from "@/components/CustomBackButton";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
@@ -25,8 +26,12 @@ import {
 import axios from "axios";
 import { app } from "@/utils/firebase";
 import { useHandleFileUpload } from "@/utils/customHooks";
+import { api } from "@/utils/api";
+import { getUserProfile } from "@/services/auth/authService";
+import { useRouter } from "expo-router";
 const { width, height } = Dimensions.get("screen");
 const EditProfile = () => {
+  const router = useRouter();
   const { user } = useSelector((state: RootState) => state.auth);
   const [profilePicture, setProfilePicture] = useState(user?.profilePicture);
   const [formData, setFormData] = useState({
@@ -34,11 +39,13 @@ const EditProfile = () => {
     surname: user?.surname,
     email: user?.email,
   });
+  const dispatch = useDispatch<AppDispatch>();
 
   const [selectedImage, setSelectedImage] = useState("");
-  const {imagePercent, handleFileUpload, imageUrl} = useHandleFileUpload()
-  
-  
+  const [updateLoading, setUpdateLoading] = useState();
+  const [errorMsg, setErrorMsg] = useState("");
+  const { imagePercent, handleFileUpload, imageUrl } = useHandleFileUpload();
+
   const handleImagePicker = async () => {
     try {
       const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -54,7 +61,6 @@ const EditProfile = () => {
         quality: 1,
         base64: true,
       });
-      console.log("result", result);
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
@@ -65,7 +71,6 @@ const EditProfile = () => {
       console.log(error);
     }
   };
-
 
   //   asset: ImagePicker.ImagePickerAsset
   // ): Promise<string | null> => {
@@ -121,23 +126,67 @@ const EditProfile = () => {
 
   const updateProfile = async () => {
     try {
+      setUpdateLoading(true);
       const profileImage = await handleFileUpload(selectedImage);
-      console.log("profileIam", profileImage)
-      
-      
-      
+      console.log("profileIam", profileImage);
 
+      if (formData.name.length <= 2 || formData.surname <= 2) {
+        setErrorMsg("Name and surname must be longer than 2 characters.");
+        return;
+      }
+
+      const res = await api.put(`/api/v1/users/${user._id}/updateProfile`, {
+        name: formData.name,
+        surname: formData.surname,
+        profilePicture: profileImage,
+      });
+
+      console.log("res", res.data);
+      if (res.status === 200) {
+        dispatch(getUserProfile(user?._id));
+      }
     } catch (error) {
-    if(axios.isAxiosError(error)){
-    console.log(error.response?.data.message)
-    }else{
-    console.log("error", error)
-    
-    }
-    
+      setUpdateLoading(true);
+      if (axios.isAxiosError(error)) {
+        console.log(error.response?.data.message);
+        setErrorMsg(error.response?.data.message);
+      } else {
+        console.log("error", error);
+        setErrorMsg(err);
+      }
+    } finally {
+      setUpdateLoading(false);
     }
   };
-
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Do you want to delete account",
+      "This action cannot be undone.",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Account deletion canceled"),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              // Burada hesabı silmek için API çağrısı yapabilirsiniz.
+              const res = await api.delete(`/api/v1/users/${user._id}`);
+              if (res.status === 200) {
+                dispatch(signOut());
+                router.push("/(auth)/login");
+              }
+            } catch (error) {
+              console.log("Error deleting account:", error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
   return (
     <SafeAreaView style={styles.content}>
       <View style={styles.head}>
@@ -212,10 +261,11 @@ const EditProfile = () => {
       </View>
 
       <CustomButton
-        text="Save Changes"
+        text={updateLoading ? "Updating..." : "Update"}
         style={[styles.btn, styles.updateBtn]}
         textColor={Colors.palette.backgroundCard}
         onPress={updateProfile}
+        disabled={updateLoading}
       />
 
       <View
@@ -234,6 +284,7 @@ const EditProfile = () => {
           text="Delete Account"
           style={[styles.btn, styles.deleteBtn]}
           textColor={Colors.palette.backgroundCard}
+          onPress={handleDeleteAccount}
         />
       </View>
     </SafeAreaView>

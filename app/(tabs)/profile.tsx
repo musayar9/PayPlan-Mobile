@@ -35,13 +35,15 @@ const Profile = () => {
   const { user, isLoading } = useSelector((state: RootState) => state.auth);
   const { group } = useSelector((state: RootState) => state.group);
   const { getTasksByUser } = useSelector((state: RootState) => state.task);
-  const [profilePicture, setProfilePicture] = useState(user?.profilePicture);
+  // const [profilePicture, setProfilePicture] = useState(user?.profilePicture);
   // const [updateImage, setUpdateImage] = useState(false);
   // const [imagePercent, setImagePercent] = useState(0);
   // const [imageError, setImageError] = useState(false);
   // const [errorMessage, setErrorMessage] = useState("");
 
   const {
+    profilePicture,
+    setProfilePicture,
     updateImage,
     setUpdateImage,
     errorMessage,
@@ -50,7 +52,7 @@ const Profile = () => {
     setImageError,
     imagePercent,
     setImagePercent,
-    handleFileUpload
+    handleFileUpload,
   } = useHandleFileUpload();
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [successMsg, setSuccessMsg] = useState("");
@@ -65,48 +67,6 @@ const Profile = () => {
     dispatch(signOut());
     router.push("/(auth)/login");
   };
-
-  // Profil fotoğrafı yükleme ve seçme işlemlerini birleştiren fonksiyonlar
-  // const handleImagePicker = async () => {
-  //   try {
-  //     const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //     if (status.status !== "granted") {
-  //       alert("Sorry, we need camera roll permissions to make this work!");
-  //       return;
-  //     }
-
-  //     const result = await ImagePicker.launchImageLibraryAsync({
-  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //       allowsEditing: true,
-  //       aspect: [4, 3],
-  //       quality: 1,
-  //       base64: true,
-  //     });
-
-  //     if (!result.canceled && result.assets && result.assets.length > 0) {
-  //       setProfilePicture(result.assets[0].base64);
-
-  //       // Eğer resmi Firebase Storage'a da yüklemek isterseniz:
-  //       // await handleFileUpload(result.assets[0]);
-
-  //       // API'ye base64 olarak gönder
-  //       const res = await api.put(
-  //         `/api/v1/users/${user?._id}/profile-picture`,
-  //         {
-  //           profilePicture: result.assets[0].base64,
-  //         }
-  //       );
-  //       console.log("res", res.data.message);
-
-  //       if (res.status === 200) {
-  //         setSuccessMsg(res.data.message);
-  //         await dispatch(getUserProfile(user?._id));
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log("tasksError", error);
-  //   }
-  // };
 
   // Firebase Storage'a dosya yüklemek için (şu an kullanılmıyor, isterseniz aktif edebilirsiniz)
   const handleImagePicker = async () => {
@@ -149,7 +109,6 @@ const Profile = () => {
     }
   };
 
-  // const handleFileUpload = async (
   //   asset: ImagePicker.ImagePickerAsset
   // ): Promise<string | null> => {
   //   try {
