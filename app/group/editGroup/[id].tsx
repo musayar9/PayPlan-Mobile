@@ -1,0 +1,409 @@
+import { setMembersList } from "@/redux/groupSlice";
+import { AppDispatch, RootState } from "@/redux/store";
+import { getGroupById } from "@/services/group/groupService";
+import { useHandleFileUpload } from "@/utils/customHooks";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
+import {
+  Image,
+  Keyboard,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  FlatList,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import AddMemberModal from "@/components/Modals/AddMemberModal";
+import CustomButton from "@/components/CustomButton";
+import Colors from "@/constants/Colors";
+import CustomInput from "@/components/CustomInput";
+import CustomHeader from "@/components/CustomHeader";
+import { api } from "@/utils/api";
+
+const EditGroup = () => {
+  const { id } = useLocalSearchParams();
+
+  const { groupDetail } = useSelector((state: RootState) => state.group);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    groupPicture: "",
+  });
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [group, setGroup] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectImage, setSelectedImage] = useState("");
+  const [error, setError] = useState(null);
+  const { membersList } = useSelector((state) => state.group);
+  const router = useRouter();
+  const { handleFileUpload, imageUrl } = useHandleFileUpload();
+  useFocusEffect(
+    useCallback(() => {
+      if (id) {
+        dispatch(getGroupById(id));
+      }
+    }, [id])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (groupDetail) {
+        dispatch(setMembersList(groupDetail?.members));
+        setFormData({
+          name: groupDetail.name || "",
+          description: groupDetail.description || "",
+          groupPicture: groupDetail.groupPicture || "",
+        });
+      }
+    }, [groupDetail])
+  );
+
+  const handleImagePicker = async () => {
+    try {
+      const status = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status.status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        base64: true,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setFormData({ ...formData, groupPicture: result.assets[0].base64 });
+        setSelectedImage(result.assets[0]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleMemberRemove = (itemValue: User) => {
+    const list = membersList?.filter((member) => member._id !== itemValue._id);
+    dispatch(setMembersList(list));
+  };
+
+  const handleUpdateGroup = async () => {
+    try {
+      setIsLoading(true);
+      const uploadedImageUrl = await handleFileUpload(selectImage);
+      console.log("upload", uploadedImageUrl, "upload");
+      let groupData = {};
+      let response = null;
+      if (uploadedImageUrl) {
+        groupData = {
+          name: formData.name,
+          description: formData.description,
+          groupPicture: uploadedImageUrl,
+          members: membersList.map((member) => member._id),
+          createdBy: user?._id,
+        };
+        response = await api.put(`/api/v1/groups/${id}`, groupData);
+      } else {
+        groupData = {
+          name: formData.name,
+          description: formData.description,
+          groupPicture: formData.groupPicture,
+          members: membersList.map((member) => member._id),
+          createdBy: user?._id,
+        };
+        response = await api.put(`/api/v1/groups/${id}`, groupData);
+      }
+      if (response.status === 200) {
+        setGroup(response.data.group);
+        await dispatch(setMembersList([]));
+        await dispatch(getGroupById(id));
+        router.back();
+      }
+      return response.data;
+    } catch (err: any) {
+      if (err?.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+      setFormData({
+        name: "",
+        description: "",
+        groupPicture: "",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user?._id && !membersList.some((member) => member._id === user._id)) {
+      const list = [...membersList, user];
+      dispatch(setMembersList(list));
+    }
+  }, []);
+
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <StatusBar />
+
+        <CustomHeader subHead="Edit Group" />
+
+        <View style={styles.imageContent}>
+          <Image
+            source={{
+              uri: formData?.groupPicture.startsWith("https:")
+                ? formData.groupPicture
+                : `data:image/png;base64,${formData?.groupPicture}`,
+            }}
+            style={styles.groupPicture}
+          />
+
+          <TouchableOpacity
+            style={styles.cameraBtn}
+            onPress={handleImagePicker}
+          >
+            <Ionicons
+              name="camera"
+              size={20}
+              color={Colors.palette.textPrimary}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={{ textAlign: "center", fontSize: 18, fontWeight: "600" }}>
+          {formData?.name || "Group Name"}
+        </Text>
+        <View style={styles.forms}>
+          <CustomInput
+            label="Group Name"
+            value={formData?.name}
+            onChangeText={(text) => setFormData({ ...formData, name: text })}
+            maxLength={20}
+            placeholder="Enter group name"
+          />
+          <Text style={styles.characterText}>
+            {20 - formData.name.length} characters remaining
+          </Text>
+
+          <CustomInput
+            label="Group Description"
+            numberOfLines={4}
+            inputHeight={{ height: 150 }}
+            value={formData.description}
+            textAlignVertical="top"
+            maxLength={200}
+            multiline={true}
+            placeholder="Tell us about your group"
+            onChangeText={(text) =>
+              setFormData({ ...formData, description: text })
+            }
+          />
+          <Text style={styles.characterText}>
+            {200 - formData.description.length} characters remaining
+          </Text>
+        </View>
+
+        <View
+          style={[
+            styles.memberField,
+            {
+              backgroundColor: membersList?.length > 1 ? Colors.background : "",
+            },
+          ]}
+        >
+          <View style={styles.addMember}>
+            <Text style={styles.memberText}>Add Member</Text>
+
+            <TouchableOpacity
+              // style={styles.addMemberBtn}
+              style={styles.addMemberBtn}
+              onPress={() => {
+                console.log("open modal");
+                setModalVisible(true);
+              }}
+            >
+              <Ionicons name="add" size={20} color={Colors.background} />
+            </TouchableOpacity>
+          </View>
+
+          {membersList?.length > 0 && (
+            <FlatList
+              horizontal
+              data={membersList}
+              key={(item) => item.id}
+              renderItem={({ item }) => {
+                if (item._id === user?._id) return null;
+
+                return (
+                  <View
+                    style={{
+                      paddingHorizontal: 4,
+                      gap: 10,
+                    }}
+                  >
+                    <Image
+                      source={{ uri: item?.profilePicture }}
+                      style={styles.profilePicture}
+                    />
+                    <TouchableOpacity
+                      style={styles.removeBtn}
+                      onPress={() => {
+                        handleMemberRemove(item);
+                      }}
+                    >
+                      <Ionicons name="close" size={16} color={Colors.error} />
+                    </TouchableOpacity>
+                  </View>
+                );
+              }}
+            />
+          )}
+        </View>
+        <CustomButton
+          text={isLoading ? "Updating" : "Update Group"}
+          disabled={isLoading}
+          style={styles.createBtn}
+          textColor={Colors.background}
+          onPress={handleUpdateGroup}
+        />
+
+        <AddMemberModal
+          setModalVisible={setModalVisible}
+          modalVisible={modalVisible}
+        />
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
+
+export default EditGroup;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: 45,
+    paddingHorizontal: 15,
+    position: "relative",
+
+    backgroundColor: Colors.lightBlur,
+    gap: 10,
+  },
+
+  forms: {
+    gap: 10,
+    backgroundColor: Colors.palette.backgroundCard,
+    padding: 10,
+    borderRadius: 12,
+  },
+
+  imageContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    // marginTop: 30,
+  },
+
+  groupPicture: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    // borderWidth: 1,
+    // borderColor: Colors.palette.border,
+    padding: 20,
+    shadowColor: "#000",
+    backgroundColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    elevation: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  cameraBtn: {
+    position: "absolute",
+    bottom: 8,
+    right: 130,
+    backgroundColor: Colors.palette.backgroundLight,
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth:1,
+  },
+  characterText: {
+    fontSize: 12,
+    color: Colors.palette.textSecondary,
+    paddingLeft: 12,
+    marginTop: -8,
+  },
+  createBtn: {
+    backgroundColor: Colors.palette.accent,
+    height: 48,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addMember: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingTop: 10,
+    // marginTop:-10
+  },
+  memberText: {
+    color: Colors.palette.textPrimary,
+    fontSize: 16,
+    fontWeight: 500,
+  },
+  addMemberBtn: {
+    backgroundColor: Colors.palette.accent,
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  profilePicture: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+
+  removeBtn: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    backgroundColor: Colors.palette.backgroundLight,
+    padding: 2,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+  },
+  memberField: {
+    gap: 10,
+    paddingBottom: 20,
+
+    borderRadius: 12,
+    paddingHorizontal: 10,
+  },
+});

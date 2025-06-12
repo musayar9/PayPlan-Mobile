@@ -32,7 +32,7 @@ const TaskEmptyComponent = ({
       <Image
         source={{
           uri: groupImage
-            ? `data:image/png;base64,${groupImage}`
+            ? `${groupImage}`
             : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
         }}
         style={styles.groupImage}

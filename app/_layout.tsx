@@ -23,6 +23,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="group/[id]" options={{ headerShown: false }} />
+          <Stack.Screen name="group/editGroup/[id]" options={{headerShown:false}}/>
           <Stack.Screen
             name="group/data-select"
             options={{

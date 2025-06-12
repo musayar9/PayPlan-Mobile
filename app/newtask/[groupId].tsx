@@ -155,7 +155,7 @@ const CreateTask = () => {
           <Image
             source={{
               uri: groupDetail?.groupPicture
-                ? `data:image/png;base64,${groupDetail?.groupPicture}`
+                ? `${groupDetail?.groupPicture}`
                 : "https://img.freepik.com/premium-vector/team-icon-group-people-icon_1199668-1555.jpg?w=360",
             }}
             style={styles.groupImage}

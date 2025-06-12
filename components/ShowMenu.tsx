@@ -5,12 +5,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import axios from "axios";
 import { api } from "@/utils/api";
-import { useRouter } from "expo-router";
+import { Link, useFocusEffect, useRouter } from "expo-router";
 
 interface ShowMenuProps {
   showMenu: boolean;
@@ -57,14 +57,24 @@ const ShowMenu = ({ groupId }: { groupId: string }) => {
           },
         ]}
       >
-        <View style={styles.editBtn}>
-          <Ionicons
-            name="pencil-sharp"
-            size={18}
-            color={Colors.palette.accent}
-          />
-          <Text style={styles.subText}>Update</Text>
-        </View>
+        <Link
+          href={{
+            pathname: "/group/editGroup/[id]",
+            params: { id: groupId },
+          }}
+          asChild
+          style={styles.editBtn}
+        >
+          <TouchableOpacity>
+            <Ionicons
+              name="pencil-sharp"
+              size={18}
+              color={Colors.palette.accent}
+            />
+            <Text style={styles.subText}>Update</Text>
+          </TouchableOpacity>
+        </Link>
+
         <TouchableOpacity onPress={handleDelete} style={styles.editBtn}>
           <Ionicons name="trash" size={18} color={Colors.red300} />
           <Text style={styles.subText}>Delete</Text>

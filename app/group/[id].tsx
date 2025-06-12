@@ -75,7 +75,7 @@ const GroupDetail = () => {
         <Image
           source={{
             uri: groupDetail?.groupPicture
-              ? `data:image/png;base64,${groupDetail.groupPicture}`
+              ? groupDetail?.groupPicture
               : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
           }}
           style={styles.groupPicture}
