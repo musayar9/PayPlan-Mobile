@@ -19,14 +19,21 @@ import { Ionicons } from "@expo/vector-icons";
 
 import Groups from "@/components/Home/Groups";
 import { Link, useFocusEffect, useRouter } from "expo-router";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { getMyGroups } from "@/services/group/groupService";
+import {
+  getTasksByGroupId,
+  getTasksByUserId,
+} from "@/services/tasks/tasksService";
+import StatCard from "@/components/Tasks/StatCard";
 const { width, height } = Dimensions.get("screen");
 const Home = () => {
   const { user, token } = useSelector((state) => state.auth);
   const { group, isLoading, error } = useSelector(
     (state: RootState) => state.group
   );
+
+  const { getTasksByUser } = useSelector((state: RootState) => state.task);
   // console.log("user", user);
   const dispatch = useDispatch<AppDispatch>();
   const clickToken = () => {
@@ -34,7 +41,21 @@ const Home = () => {
   };
 
   const router = useRouter();
-  console.log("yser", user?._id);
+
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getTasksByUserId(user?._id));
+    }, [user])
+  );
+
+  const statGroup = (statusText: string) => {
+    return (
+      getTasksByUser?.filter((item) => item.status === statusText).length || 0
+    );
+  };
+
+
 
   return (
     <View style={styles.container}>
@@ -106,6 +127,34 @@ const Home = () => {
             />
           </Link>
         </View>
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          gap: 12,
+          padding: 16,
+        }}
+      >
+        <StatCard
+          icon="time-outline"
+          label="Pending"
+          count={statGroup("pending")}
+          color={"#F2385A"}
+        />
+        <StatCard
+          icon="sync-outline"
+          label="In-Progress"
+          count={statGroup("in-progress")}
+          color={"#c280d2"}
+        />
+        <StatCard
+          icon="checkmark-done-outline"
+          label="Completed"
+          count={statGroup("completed")}
+          color={"#038C3E"}
+        />
       </View>
 
       <Groups />

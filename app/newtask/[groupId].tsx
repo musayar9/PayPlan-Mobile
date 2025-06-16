@@ -179,6 +179,7 @@ const CreateTask = () => {
             label="Task Description"
             numberOfLines={4}
             textAlignVertical="top"
+         
             multiline={true}
             placeholder="Enter task description"
             inputHeight={{ height: 150 }}
@@ -314,8 +315,8 @@ const styles = StyleSheet.create({
   head: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: Colors.background,
-    borderRadius: 10,
+    backgroundColor: Colors.palette.backgroundCard,
+    borderRadius: 12,
     padding: 15,
   },
   subHead: { color: Colors.textPrimary, fontWeight: "600", fontSize: 18 },
@@ -340,7 +341,7 @@ const styles = StyleSheet.create({
   },
   dueBtnText: {
     marginVertical: 12,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.palette.backgroundCard,
     padding: 10,
     // fontSize: 12,
     borderRadius: 10,
@@ -350,7 +351,7 @@ const styles = StyleSheet.create({
   forms: {
     gap: 10,
     marginTop: 20,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.palette.backgroundCard,
     padding: 10,
     borderRadius: 10,
   },
@@ -384,10 +385,10 @@ const styles = StyleSheet.create({
   },
   memberListContent: {
     marginVertical: 12,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.palette.backgroundCard,
     padding: 10,
     // fontSize: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     fontWeight: "500",
     flexDirection: "row",
     gap: 10,

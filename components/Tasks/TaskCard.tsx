@@ -53,7 +53,7 @@ const TaskCard = ({ item, isAssigned }: TaskCardProps) => {
               <Image
                 source={{
                   uri: item.group.groupPicture
-                    ? `data:image/png;base64,${item.group.groupPicture}`
+                    ? `${item.group.groupPicture}`
                     : "https://t3.ftcdn.net/jpg/04/98/81/32/360_F_498813253_1F67TUXp7RKXETW6ZdavRa3dzwsGNgEd.jpg",
                 }}
                 style={styles.groupImage}
